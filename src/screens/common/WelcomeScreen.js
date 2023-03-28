@@ -13,7 +13,7 @@ const WelcomeScreen=({navigation})=>{
         <View style={[CommonStyles.container,{justifyContent:'space-between'}]}>
             <View style={{height: hp('25%'),justifyContent:'center'}}>
                 <Image
-                source={{uri: image}}
+                source={require('./../../../assets/logo.png')}
 
                 style={{height: hp('10%'),width:wp('40%'),alignSelf:'center'}}
                 
@@ -35,7 +35,7 @@ const WelcomeScreen=({navigation})=>{
                 <View style={styles.buttonConatiner}>
                 <Button
                 title={'Join Our Professionals'}
-                onPress={()=>{navigation.navigate('CustomerNavigations')}}
+                onPress={()=>{navigation.navigate('TechnicianNavigation')}}
                 backgroundColor={Colors.deepBlue}
                 height={hp('8%')}
                 width={wp('90%')}

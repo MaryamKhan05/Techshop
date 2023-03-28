@@ -23,10 +23,10 @@ const CustomerDrawer=()=>{
       const color= Colors.deepBlue;
       const size=30;
       return(
-        <View style={{flex: 1}}>
+        <View style={{flex: 1,justifyContent:'center',top: hp('2%')}}>
           <Image
           source={{uri:image}}
-          style={{height: hp('10%'),width:wp('50%'),alignSelf:'center'}}
+          style={{height: hp('10%'),top:hp('3%'),width:wp('50%'),alignSelf:'center'}}
           
           />
                <DrawerContentScrollView {...props}>

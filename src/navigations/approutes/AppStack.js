@@ -4,6 +4,7 @@ import WelcomeScreen from '../../screens/common/WelcomeScreen'
 
 
 import CustomerNavigations from '../customer/CustomerNavigations'
+import TechnicianNavigation from '../technician/TechnicianNavigations'
 
 const stack= createNativeStackNavigator()
 const AppStack=()=>{
@@ -11,6 +12,7 @@ const AppStack=()=>{
         <stack.Navigator screenOptions={{headerShown:false}}>
             <stack.Screen component={WelcomeScreen} name="WelcomeScreen" />
             <stack.Screen component={CustomerNavigations} name="CustomerNavigations" />
+            <stack.Screen component={TechnicianNavigation} name="TechnicianNavigation" />
         </stack.Navigator>
     )
 }
