@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useState} from 'react'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 
 import {View,Text,TouchableOpacity,Image} from 'react-native'
@@ -15,6 +15,12 @@ import Vechiles from '../../screens/customer/Vechiles/Vechiles'
 import SellVechileForm from '../../screens/customer/SellVechile/SellVechileForm'
 import { heightPercentageToDP as hp,widthPercentageToDP as wp } from 'react-native-responsive-screen'
 import { image } from '../../screens/customer/Services/DummyServices'
+import ServiceStatus from '../../screens/customer/ServiceStatus/ServiceStatus'
+import SparePartStatus from '../../screens/customer/SparePartStatus/SparePartsStatus'
+import VechileAdStatus from '../../screens/customer/VechileStatus/VechileAdStatus'
+import { auth } from '../../../firebase.config'
+import { signOut } from 'firebase/auth'
+import { ColorSpace } from 'react-native-reanimated'
 
 const drawer =createDrawerNavigator()
 const CustomerDrawer=()=>{
@@ -22,6 +28,7 @@ const CustomerDrawer=()=>{
     function CustomDrawerContent(props){
       const color= Colors.deepBlue;
       const size=30;
+      const[itemColor,setItemColor]=useState(false)
       return(
         <View style={{flex: 1,justifyContent:'center',top: hp('2%')}}>
           <Image
@@ -31,6 +38,16 @@ const CustomerDrawer=()=>{
           />
                <DrawerContentScrollView {...props}>
       <DrawerItemList {...props} />
+                <TouchableOpacity
+                style={{ backgroundColor: itemColor?Colors.deepBlue:'white',marginHorizontal:wp('2.5%'),marginVertical:hp('0.5%'),paddingHorizontal:wp('5%'),paddingVertical:hp('1%')}}
+                onPress={()=>{
+                  console.log(auth.currentUser)
+                  setItemColor(true)
+                  console.log("Pressed")
+                  signOut(auth).then(()=>{console.log('Logged out')}).catch((err)=>{console.log(err)})}}
+                >
+                  <Text style={{color: itemColor?Colors.white:Colors.deepBlue}}>Log Out</Text>
+                </TouchableOpacity>
       {/* <DrawerItem
         label="Settings"
         onPress={() => navigation.navigate('Settings')}
@@ -60,6 +77,9 @@ const CustomerDrawer=()=>{
          <drawer.Screen component={SpareParts} name='SpareParts' options={{drawerLabel:'SpareParts',drawerActiveBackgroundColor:Colors.deepBlue,drawerActiveTintColor:Colors.white, drawerInactiveTintColor:Colors.deepBlue}}/>
          <drawer.Screen component={Vechiles} name='Vechiles' options={{drawerLabel:'Vechiles',drawerActiveBackgroundColor:Colors.deepBlue,drawerActiveTintColor:Colors.white, drawerInactiveTintColor:Colors.deepBlue}}/>
          <drawer.Screen component={SellVechileForm} name='SellVechileForm' options={{drawerLabel:'Sell Vechile',drawerActiveBackgroundColor:Colors.deepBlue,drawerActiveTintColor:Colors.white, drawerInactiveTintColor:Colors.deepBlue}}/>
+         <drawer.Screen component={ServiceStatus} name='ServiceStatus' options={{drawerLabel:'Service Request Status',drawerActiveBackgroundColor:Colors.deepBlue,drawerActiveTintColor:Colors.white, drawerInactiveTintColor:Colors.deepBlue}}/>
+         <drawer.Screen component={SparePartStatus} name='SparePartStatus' options={{drawerLabel:'Spare Part Request Status',drawerActiveBackgroundColor:Colors.deepBlue,drawerActiveTintColor:Colors.white, drawerInactiveTintColor:Colors.deepBlue}}/>
+         <drawer.Screen component={VechileAdStatus} name='VechileAdStatus' options={{drawerLabel:'Vechile Ad Status',drawerActiveBackgroundColor:Colors.deepBlue,drawerActiveTintColor:Colors.white, drawerInactiveTintColor:Colors.deepBlue}}/>
         
       </drawer.Navigator>
     )

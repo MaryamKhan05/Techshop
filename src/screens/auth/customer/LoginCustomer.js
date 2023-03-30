@@ -7,11 +7,18 @@ import CommonStyles from "../../../config/styles/styles";
 
 import {widthPercentageToDP as wp,heightPercentageToDP as hp} from 'react-native-responsive-screen'
 import Colors from "../../../config/colors/Colors";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../../../firebase.config";
+
 const LoginScreen=({navigation})=>{
 
     const[email,setEmail]=useState('')
     const[password,setPassword]=useState('')
-    return(
+
+    const handleLogin=async()=>{
+    await   signInWithEmailAndPassword(auth,email,password)
+    }
+      return(
 <View style={[CommonStyles.container,{}]}>
    
 <View style={{justifyContent:'center'}}>
@@ -49,7 +56,7 @@ resizeMode='contain'
     title={'Login'}
     borderRadius={10}
     width={wp('50%')}
-   onPress={()=>{navigation.navigate('CustomerDrawer')}}
+   onPress={()=>{handleLogin()}}
    
     />
 </View>

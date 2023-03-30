@@ -14,7 +14,8 @@ const Input=({
     placeholder,
     borderColor,
     textColor,
-    disabled
+    disabled,
+    keyboardType
 })=>{
     return(
         <View style={styles.inputContainer}>
@@ -31,6 +32,7 @@ const Input=({
 secureTextEntry={secureTextEntry}
             value={value}
             onChangeText={onChangeText}
+            keyboardType={keyboardType?keyboardType:'default'}
             />
         </View>
     )
