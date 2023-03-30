@@ -45,7 +45,9 @@ const WelcomeScreen=({navigation})=>{
             </View>
 
             <View style={{justifyContent:'center',alignItems:'center',height:hp('25%')}}>
-                <TouchableOpacity>
+                <TouchableOpacity
+                onPress={()=>{navigation.navigate('AdminStack')}}
+                >
                     <Text style={styles.adminTitle}>Admin ?</Text>
                 </TouchableOpacity>
             </View>

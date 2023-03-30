@@ -1,6 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import React from 'react'
 import WelcomeScreen from '../../screens/common/WelcomeScreen'
+import AdminStack from '../adminNavigation/adminStack'
 
 
 import CustomerNavigations from '../customer/CustomerNavigations'
@@ -13,6 +14,7 @@ const AppStack=()=>{
             <stack.Screen component={WelcomeScreen} name="WelcomeScreen" />
             <stack.Screen component={CustomerNavigations} name="CustomerNavigations" />
             <stack.Screen component={TechnicianNavigation} name="TechnicianNavigation" />
+            <stack.Screen component={AdminStack} name="AdminStack" />
         </stack.Navigator>
     )
 }
