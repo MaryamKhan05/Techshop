@@ -2,37 +2,39 @@ import React, { useState } from "react";
 import { View, Text, TextInput, StyleSheet, Button } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const EditService = ({ navigation, route }) => {
-  const { serviceId, serviceName } = route.params;
-  const [editedServiceName, setEditedServiceName] = useState(serviceName);
-  const handleUpdateService = async () => {
-    const existingServices = await AsyncStorage.getItem("services");
+const EditService = ({ route, navigation }) => {
+  const { item, handleUpdateService } = route.params;
+  const [serviceName, setServiceName] = useState(item.serviceName);
+  const [customerName, setCustomerName] = useState(item.customerName);
+  const [customerAddress, setCustomerAddress] = useState(item.customerAddress);
+  const [requestDate, setRequestDate] = useState(item.requestDate);
+  const [time, setTime] = useState(item.time);
+  const [description, setDescription] = useState(item.description);
 
-    if (existingServices) {
-      const services = JSON.parse(existingServices);
-      const updatedServices = services.map((service) =>
-        service.id === serviceId
-          ? { ...service, serviceName: editedServiceName }
-          : service
-      );
-      await AsyncStorage.setItem("services", JSON.stringify(updatedServices));
-      route.params.handleEditServiceItem(
-        updatedServices.find((service) => service.id === serviceId)
-      );
-      navigation.goBack({
-        serviceName: editedServiceName,
-      });
-    }
+  const handleSaveChanges = async () => {
+    const updatedService = {
+      id: item.id,
+      serviceName: serviceName,
+      customerName: customerName,
+      customerAddress: customerAddress,
+      requestDate: requestDate,
+      time: time,
+      description: description,
+      image: item.image,
+    };
+
+    await handleUpdateService(updatedService);
+    navigation.goBack();
   };
   return (
     <View style={styles.container}>
       <Text style={styles.label}>Service Name:</Text>
       <TextInput
         style={styles.input}
-        onChangeText={(text) => setEditedServiceName(text)}
-        value={editedServiceName}
+        onChangeText={(text) => setServiceName(text)}
+        value={serviceName}
       />
-      <Button title="Update Service" onPress={handleUpdateService} />
+      <Button title="Update Service" onPress={handleSaveChanges} />
     </View>
   );
 };
