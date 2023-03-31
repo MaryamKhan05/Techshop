@@ -93,7 +93,8 @@ import Button from "../../../components/Button/Button";
 import Colors from "../../../config/colors/Colors";
 import { Spacer } from "../../../components/Spacer/Spacer";
 import Header from "../../../components/Header/Header";
-const AddService = ({ navigation, route }) => {
+
+const AddParts = ({ navigation, route }) => {
   const [requestDate, setRequestDate] = useState("");
   const [serviceName, setServiceName] = useState("");
   const [customerName, setCustomerName] = useState("");
@@ -103,7 +104,7 @@ const AddService = ({ navigation, route }) => {
   const [imageData, setImageData] = useState(null);
 
   const handleSave = async () => {
-    const newService = {
+    const newParts = {
       id: Math.random(),
       requestDate,
       serviceName,
@@ -114,16 +115,16 @@ const AddService = ({ navigation, route }) => {
       imageData,
     };
 
-    const existingServices = await AsyncStorage.getItem("services");
-    let services = [];
+    const existingParts = await AsyncStorage.getItem("spareparts");
+    let spareparts = [];
 
-    if (existingServices) {
-      services = JSON.parse(existingServices);
+    if (existingParts) {
+        spareparts = JSON.parse(existingParts);
     }
 
-    services.push(newService);
+    spareparts.push(newParts);
 
-    await AsyncStorage.setItem("services", JSON.stringify(services));
+    await AsyncStorage.setItem("spareparts", JSON.stringify(spareparts));
     setRequestDate("");
     setServiceName("");
     setCustomerName("");
@@ -131,9 +132,9 @@ const AddService = ({ navigation, route }) => {
     setTime("");
     setDescription("");
     setImageData(null);
-    const handleAddService = route.params.handleAddService;
-    handleAddService(newService);
-    navigation.navigate("Services");
+    const handleAddParts = route.params.handleAddParts;
+    handleAddParts(newParts);
+    navigation.goBack();
   };
 
   const handleSelectImage = () => {
@@ -171,7 +172,7 @@ const AddService = ({ navigation, route }) => {
       >
         <Header headerTitle="Add New Service" />
         <Spacer />
-        <Text style={styles.text}>Service Name:</Text>
+        <Text style={styles.text}>Part Name:</Text>
         <TextInput
           value={serviceName}
           onChangeText={setServiceName}
@@ -204,6 +205,7 @@ const AddService = ({ navigation, route }) => {
     </SafeAreaView>
   );
 };
+
 const styles = StyleSheet.create({
   text: {
     fontSize: hp("2"),
@@ -218,4 +220,4 @@ const styles = StyleSheet.create({
     marginVertical: hp("1"),
   },
 });
-export default AddService;
+export default AddParts;

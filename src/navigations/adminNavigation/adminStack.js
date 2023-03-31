@@ -12,6 +12,7 @@ import AdminDrawer from "./adminDrawer";
 import AddService from "../../screens/admin/Services/AddServices";
 import EditService from "../../screens/admin/Services/EditServices";
 import Detail from "../../screens/admin/ServiceDetail/ServiceDetail";
+import AddParts from "../../screens/admin/SparePartsReq/AddSpareParts";
 
 const Stack = createStackNavigator();
 
@@ -63,6 +64,11 @@ const AdminStack = () => {
         <Stack.Screen
           name="Detail"
           component={Detail}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="AddParts"
+          component={AddParts}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

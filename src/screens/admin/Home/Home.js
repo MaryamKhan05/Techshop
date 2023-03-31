@@ -22,67 +22,56 @@ const Home = ({ navigation }) => {
     <View
       style={{
         backgroundColor: Colors.white,
-        padding: hp("1"),
+        paddingVertical: hp("2"),
         flex: 1,
-
-        // alignItems:'center'
       }}
     >
       <View
         style={{
-          // backgroundColor: Colors.lightBlue,
-          // padding: hp("0.2"),
-          // height: hp("35"),
-          // justifyContent: "center",
-          // alignItems:'center'
+          flexDirection: "row",
+          justifyContent: "space-between",
         }}
       >
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
-          <Text style={styles.categoryLabel}>Services Requests</Text>
-          {/* <TouchableOpacity
+        <Text style={styles.categoryLabel}>Services Requests</Text>
+        {/* <TouchableOpacity
           onPress={() => {
             navigation.navigate("Services");
           }}
         >
           <Text style={styles.viewAllLabel}>View All</Text>
         </TouchableOpacity> */}
-        </View>
-        <HorizontalList
-          Data={AdminServices}
-          renderItem={({ item }) => {
-            return (
-              <View style={{ paddingHorizontal: hp("2%") }}>
-                <AdminServiceCard
-                  service={item.serviceName}
-                  customer={item.customerName}
-                  address={item.customerAdress}
-                  image={item.image}
-                  width={hp("20")}
-                  time={item.time}
-                  onPress={() => {
-                    navigation.navigate("Detail", {
-                      name: item.serviceName,
-                      customer: item.customerName,
-                      address: item.customerAdress,
-                      time: item.time,
-                      desc: item.description,
-                      image: item.image,
-                    });
-                  }}
-                />
-              </View>
-            );
-          }}
-          keyExtractor={(item) => {
-            return item.id.toString();
-          }}
-        />
       </View>
+      <HorizontalList
+        Data={AdminServices}
+        renderItem={({ item }) => {
+          return (
+            <View style={{ paddingHorizontal: hp("2%") }}>
+              <AdminServiceCard
+                service={item.serviceName}
+                customer={item.customerName}
+                address={item.customerAdress}
+                image={item.image}
+                width={hp("20")}
+                time={item.time}
+                onPress={() => {
+                  navigation.navigate("Detail", {
+                    name: item.serviceName,
+                    customer: item.customerName,
+                    address: item.customerAdress,
+                    time: item.time,
+                    desc: item.description,
+                    image: item.image,
+                  });
+                }}
+              />
+            </View>
+          );
+        }}
+        keyExtractor={(item) => {
+          return item.id.toString();
+        }}
+      />
+      <Spacer />
       <Spacer />
       <View
         style={{
@@ -137,7 +126,7 @@ const Home = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   categoryLabel: {
-    marginHorizontal: hp("3%"),
+    marginHorizontal: hp("2%"),
     fontSize: 18,
     color: Colors.deepBlue,
     fontWeight: "bold",
@@ -148,13 +137,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: Colors.red,
     fontWeight: "bold",
-  },
-  body: {
-    // height: hp('75%'),
-    borderRadius: 30,
-    flex: 0.8,
-    backgroundColor: Colors.white,
-    justifyContent: "center",
   },
 });
 

@@ -15,9 +15,7 @@ import Services from "../../screens/admin/Services/Services";
 import SparePartsReq from "../../screens/admin/SparePartsReq/SparePartsReq";
 import AddService from "../../screens/admin/Services/AddServices";
 import Colors from "../../config/colors/Colors";
-
 const Drawer = createDrawerNavigator();
-
 const size = hp("2.5");
 const color = Colors.deepBlue;
 const AdminDrawer = ({ navigation }) => {
@@ -158,45 +156,6 @@ const AdminDrawer = ({ navigation }) => {
       <Drawer.Screen
         name="Spare Parts"
         component={SparePartsReq}
-        // options={{
-        //   drawerIcon: ({ focused, size }) => (
-        //     <Ionicons name="library" size={size} color={color} />
-        //   ),
-        //   headerTitle: () => (
-        //     <Image
-        //       source={require("./../../../assets/logo.jpg")}
-        //       style={{
-        //         height: hp("5%"),
-        //         width: wp("20%"),
-        //         alignSelf: "center",
-        //       }}
-        //       resizeMode="contain"
-        //     />
-        //   ),
-        //   headerTitleAlign: "center",
-        //   headerRight: () => [
-        //     <View style={styles.icon}>
-        //       <TouchableOpacity
-        //         onPress={() => navigation.navigate("Notification")}
-        //       >
-        //         <Bubble
-        //           icon={<FontAwesome name="bell-o" size={size} color={color} />}
-        //         />
-        //       </TouchableOpacity>
-        //       <TouchableOpacity onPress={() => navigation.navigate("Search")}>
-        //         <Bubble
-        //           icon={
-        //             <Ionicons name="search-outline" size={size} color={color} />
-        //           }
-        //         />
-        //       </TouchableOpacity>
-        //     </View>,
-        //   ],
-        // }}
-      />
-      <Drawer.Screen
-        name="AddService"
-        component={AddService}
         // options={{
         //   drawerIcon: ({ focused, size }) => (
         //     <Ionicons name="library" size={size} color={color} />

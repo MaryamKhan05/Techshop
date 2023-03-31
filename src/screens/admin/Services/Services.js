@@ -1,59 +1,27 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, FlatList, Alert, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Button from "../../../components/Button/Button";
-import { AdminServices } from "./DummyData";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AdminServices as DummyData } from "./DummyData";
-
+import Button from "../../../components/Button/Button";
 const Services = ({ navigation }) => {
   const [adminServices, setAdminServices] = useState([]);
 
   useEffect(() => {
     const getServices = async () => {
       const existingServices = await AsyncStorage.getItem("services");
-      console.log("existing service are ", existingServices);
       if (existingServices) {
-        // Parse the JSON and remove null items from the array
         const services = JSON.parse(existingServices).filter(
           (service) => service !== null
         );
         setAdminServices(services);
       }
     };
-
     getServices();
   }, []);
-
-  const renderItem = ({ item }) => (
-    <View style={styles.serviceItem}>
-      <Image source={{ uri: item.image }} style={styles.serviceImage} />
-      <View style={styles.serviceDetails}>
-        <Text style={styles.serviceName}>{item.serviceName}</Text>
-        <Text style={styles.serviceCustomer}>
-          Customer: {item.customerName}
-        </Text>
-        <Text style={styles.serviceAddress}>
-          Address: {item.customerAdress}
-        </Text>
-        <Text style={styles.serviceDate}>Date: {item.requestDate}</Text>
-        <Text style={styles.serviceTime}>Time: {item.time}</Text>
-        <Text style={styles.serviceDescription}>{item.description}</Text>
-        <View style={styles.serviceButtons}>
-          <Button
-            title="Edit"
-            width={60}
-            onPress={() => handleEditService(item)}
-          />
-          <Button
-            title="Delete"
-            width={60}
-            onPress={() => handleDelete(item)}
-          />
-        </View>
-      </View>
-    </View>
-  );
 
   const handleAddService = (newService) => {
     setAdminServices([...adminServices, newService]);
@@ -110,28 +78,56 @@ const Services = ({ navigation }) => {
     // Store the updated services array in async storage
     await AsyncStorage.setItem("services", JSON.stringify(updatedServices));
   };
-  
+  const renderItem = ({ item }) => (
+    <View style={styles.serviceItem}>
+      <Image source={{ uri: item.image }} style={styles.serviceImage} />
+      <View style={styles.serviceDetails}>
+        <Text style={styles.serviceName}>{item.serviceName}</Text>
+        <Text style={styles.serviceDescription}>{item.description}</Text>
+        <View style={styles.serviceButtons}>
+          <Button
+            title="Edit"
+            width={wp("20")}
+            height={hp("4.4")}
+            onPress={() => handleEditService(item)}
+          />
+          <Button
+            width={wp("20")}
+            height={hp("4.4")}
+            title="Delete"
+            onPress={() => handleDelete(item)}
+          />
+        </View>
+      </View>
+    </View>
+  );
+
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Services</Text>
-      <Button
-        title="Add Service"
-        onPress={() => navigation.navigate("AddService", { handleAddService })}
-      />
+      <View
+      style={{
+        paddingHorizontal: hp('2'),
+      }}
+      >
       <FlatList
+        showsVerticalScrollIndicator={false}
         data={adminServices}
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderItem}
       />
+      <Button
+        title="Add Service"
+        onPress={() => navigation.navigate("AddService", { handleAddService })}
+      />
+      </View>
     </SafeAreaView>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-    padding: 20,
+    
   },
   title: {
     fontSize: 24,
@@ -184,8 +180,11 @@ const styles = StyleSheet.create({
   },
   serviceButtons: {
     flexDirection: "row",
-    justifyContent: "flex-end",
+    // backgroundColor:'yellow',
+    alignSelf: "flex-end",
+    // padding:5,
+    justifyContent: "space-between",
+    // justifyContent: "flex-end",
   },
 });
-
 export default Services;
