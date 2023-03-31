@@ -23,26 +23,21 @@ const SellVechileForm=()=>{
 
     const uploadImage= async () => {
 
-        if (Platform.OS == 'android') {
-            
-            // const hasPermissions = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE, {
-            //     title: 'Camera Access Required',
-            //     message: 'TechShop Needs To Access Your Camera'
-            // });
-            // console.log("Permissions"+ hasPermissions)
-            // if (hasPermissions === PermissionsAndroid.RESULTS.GRANTED) {
-                launchImageLibrary({
-                    quality: 0.5, mediaType: 'photo'
-                },
-                    (fileobj) => {
-                        if (fileobj.didCancel || fileobj.errorCode) { return ToastAndroid.show('Image Upload Cancelled', ToastAndroid.SHORT) }
-                        const img = fileobj.assets[0]
-                        setImage(img.uri)
-                    }
-                )
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
 
 
-            
+
+        if (result.canceled) {
+            setImage('')
+        }
+        else {
+            setImage(result.assets[0].uri);
+
         }
 
     }

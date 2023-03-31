@@ -55,7 +55,7 @@ const AdminStack = () => {
         <Stack.Screen
           name="AddService"
           component={AddService}
-          options={{ headerShown: false }}
+          options={{ headerTitle: 'Add New Service',headerTitleAlign:'center' }}
         />
         <Stack.Screen
           name="EditService"

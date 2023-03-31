@@ -1,76 +1,4 @@
-// import { useState } from "react";
-// import { View, Text, TextInput, Button, Image } from "react-native";
-// import { SafeAreaView } from "react-native-safe-area-context";
-// import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// const AddService = ({ navigation, route }) => {
-//   const [requestDate, setRequestDate] = useState("");
-//   const [serviceName, setServiceName] = useState("");
-//   const [customerName, setCustomerName] = useState("");
-//   const [customerAddress, setCustomerAddress] = useState("");
-//   const [time, setTime] = useState("");
-//   const [description, setDescription] = useState("");
-//   const [image, setImage] = useState("");
-
-//   const handleSave = async () => {
-//     const newService = {
-//       id: Math.random(),
-//       requestDate,
-//       serviceName,
-//       customerName,
-//       customerAddress,
-//       time,
-//       description,
-//       image,
-//     };
-
-//     const existingServices = await AsyncStorage.getItem("services");
-//     let services = [];
-
-//     if (existingServices) {
-//       services = JSON.parse(existingServices);
-//     }
-
-//     services.push(newService);
-
-//     await AsyncStorage.setItem("services", JSON.stringify(services));
-//     setRequestDate("");
-//     setServiceName("");
-//     setCustomerName("");
-//     setCustomerAddress("");
-//     setTime("");
-//     setDescription("");
-//     setImage("");
-//     const handleAddService = route.params.handleAddService;
-//     handleAddService(newService);
-//     navigation.navigate("Services");
-//   };
-//   return (
-//     <SafeAreaView>
-//       <Image
-//         source={{
-//           uri: "https://cdn-icons-png.flaticon.com/512/2872/2872152.png",
-//         }}
-//         style={{ width: 100, height: 100, marginBottom: 10 }}
-//       />
-//       <Text>Request Date:</Text>
-//       <TextInput value={requestDate} onChangeText={setRequestDate} />
-//       <Text>Service Name:</Text>
-//       <TextInput value={serviceName} onChangeText={setServiceName} />
-//       <Text>Customer Name:</Text>
-//       <TextInput value={customerName} onChangeText={setCustomerName} />
-//       <Text>Customer Address:</Text>
-//       <TextInput value={customerAddress} onChangeText={setCustomerAddress} />
-//       <Text>Time:</Text>
-//       <TextInput value={time} onChangeText={setTime} />
-//       <Text>Description:</Text>
-//       <TextInput value={description} onChangeText={setDescription} />
-//       <Button title="Save" onPress={handleSave} />
-//     </SafeAreaView>
-//   );
-// };
-
-// export default AddService;
 
 import React, { useState } from "react";
 import {
@@ -80,6 +8,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   View,
+  ToastAndroid,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
@@ -87,121 +16,199 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 
-import ImagePicker from "react-native-image-picker";
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Button from "../../../components/Button/Button";
 import Colors from "../../../config/colors/Colors";
 import { Spacer } from "../../../components/Spacer/Spacer";
 import Header from "../../../components/Header/Header";
+import * as ImagePicker from 'expo-image-picker';
+import Input from "../../../components/Input/Input";
+import { addDoc, collection } from "firebase/firestore";
+import { db, storage } from "../../../../firebase.config";
+import { getDownloadURL, ref,uploadBytes,getStorage, uploadBytesResumable } from "firebase/storage";
+import CommonStyles from "../../../config/styles/styles";
 const AddService = ({ navigation, route }) => {
-  const [requestDate, setRequestDate] = useState("");
+  const [serviceCharges, setServiceCharges] = useState("");
   const [serviceName, setServiceName] = useState("");
-  const [customerName, setCustomerName] = useState("");
-  const [customerAddress, setCustomerAddress] = useState("");
-  const [time, setTime] = useState("");
   const [description, setDescription] = useState("");
-  const [imageData, setImageData] = useState(null);
+  const [pickedImage, setPickedImage] = useState('')
 
-  const handleSave = async () => {
-    const newService = {
-      id: Math.random(),
-      requestDate,
-      serviceName,
-      customerName,
-      customerAddress,
-      time,
-      description,
-      imageData,
+const validateValues=()=>{
+  if(serviceName==''){ return alert('Service Name Is Required')}
+ else if(description==''){ return alert('Service Description Is Required')}
+  else if(serviceCharges==''){ return alert('Service Charges Are Required')}
+  else if(pickedImage==''){ return alert('Service Image Is Required')}
+  else{
+    imageUpload()
+  }
+}
+const imageUpload = async () => {
+  const blobImage = await new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+      resolve(xhr.response);
     };
-
-    const existingServices = await AsyncStorage.getItem("services");
-    let services = [];
-
-    if (existingServices) {
-      services = JSON.parse(existingServices);
-    }
-
-    services.push(newService);
-
-    await AsyncStorage.setItem("services", JSON.stringify(services));
-    setRequestDate("");
-    setServiceName("");
-    setCustomerName("");
-    setCustomerAddress("");
-    setTime("");
-    setDescription("");
-    setImageData(null);
-    const handleAddService = route.params.handleAddService;
-    handleAddService(newService);
-    navigation.navigate("Services");
+    xhr.onerror = function () {
+      reject(new TypeError("Network request failed"));
+    };
+    xhr.responseType = "blob";
+    xhr.open("GET", pickedImage, true);
+    xhr.send(null);
+    const metadata = {
+      contentType: "image/jpeg",
+    };
+  });
+  // Create the file metadata
+  /** @type {any} */
+  const metadata = {
+    contentType: "image/jpeg",
   };
 
-  const handleSelectImage = () => {
-    const options = {
-      title: "Select Image",
-      storageOptions: {
-        skipBackup: true,
-        path: "images",
-      },
-    };
+  // Upload file and metadata to the object 'images/mountains.jpg'
+  const storageRef = ref(storage, "Services/" + Date.now());
+  const uploadTask = uploadBytesResumable(storageRef, blobImage, metadata);
 
-    ImagePicker.showImagePicker(options, (response) => {
-      if (response.didCancel) {
-        console.log("User cancelled image picker");
-      } else if (response.error) {
-        console.log("ImagePicker Error: ", response.error);
-      } else {
-        setImageData(response);
+  // Listen for state changes, errors, and completion of the upload.
+  uploadTask.on(
+    "state_changed",
+    (snapshot) => {
+      // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+      const progress =
+        (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      console.log("Upload is " + progress + "% done");
+      switch (snapshot.state) {
+        case "paused":
+          console.log("Upload is paused");
+          break;
+        case "running":
+          console.log("Upload is running");
+          break;
+        case "success":
+          console.log("Your Image Uploaded Successfully");
       }
-    });
+    },
+    (error) => {
+      switch (error.code) {
+        case "storage/unauthorized":
+          // User doesn't have permission to access the object
+          break;
+        case "storage/canceled":
+          // User canceled the upload
+          break;
+
+        // ...
+
+        case "storage/unknown":
+          // Unknown error occurred, inspect error.serverResponse
+          break;
+      }
+    },
+    () => {
+      // Upload completed successfully, now we can get the download URL
+      getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+
+
+        console.log("File available at", downloadURL);
+        handleSave(downloadURL)
+      });
+    }
+  );
+};
+
+const clearFields=()=>{
+  setPickedImage('')
+  setServiceCharges('')
+  setServiceName('')
+  setDescription('')
+}
+
+  const handleSave = async (imageUrl) => {
+  const dbref= collection(db,'Services')
+  addDoc(dbref,{
+    date: new Date().toDateString(),
+    serviceName,
+    serviceCharges,
+    serviceDescription: description,
+    image:imageUrl
+  }).then(()=>{
+
+    ToastAndroid.show('Service Added ',ToastAndroid.SHORT)
+    clearFields()
+  }).catch((err)=>{console.log(err)})
+    
   };
+
+
+    const pickImage = async () => {
+        // No permissions request is necessary for launching the image library
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+
+
+        if (result.canceled) {
+            setPickedImage('')
+        }
+        else {
+            setPickedImage(result.assets[0].uri);
+
+        }
+    };
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: Colors.white,
-      }}
-    >
-   
+  
       <View
-        style={{
-          padding: hp("2"),
-          flex: 0.9,
-        }}
+        style={[CommonStyles.container,{padding:hp('1%')}]}
       >
-        <Header headerTitle="Add New Service" />
+        <View >
+          <View style={{alignItems:'center',paddingVertical:hp('2%')}}>
+        <Input
+        title={'Service Name:'}
+         value={serviceName}
+         placeholder="Enter Service Name"
+         onChangeText={setServiceName}
+        />
+          </View>
+         <View style={{alignItems:'center',paddingVertical:hp('2%')}}>
+        <Input
+        title={'Service Description:'}
+         value={description}
+         placeholder="Describe The Serivce"
+         onChangeText={setDescription}
+        />
+     </View>
+    <View style={{alignItems:'center',paddingVertical:hp('2%')}}>
+        <Input
+        title={'Service Charges:'}
+         value={serviceCharges}
+         placeholder="Enter Service Charges"
+         keyboardType={'numeric'}
+         onChangeText={setServiceCharges}
+        />
+
+     </View>
+<View style={{borderRadius:10,elevation:2,backgroundColor:Colors.white,padding:hp('2%'),alignItems:'center',margin: wp('1%')}}>
+     { pickedImage && <Image
+          source={{ uri: pickedImage }}
+          style={{ width: wp('70%'),  marginVertical:hp('1%'),height: hp('15%') }}
+          resizeMode="contain"
+        />}
+     { !pickedImage && <Image
+          source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDfd37kUihRkyoe3DHC2mwwmVFMGjt-pZbVA&usqp=CAU' }}
+          style={{ width: wp('50%'), marginVertical:hp('1%'),height: hp('15%') }}
+          resizeMode="contain"
+        />}
+<Button title="Upload Service Image" backgroundColor={Colors.deepBlue} borderRadius={5} onPress={()=>{pickImage()}} />
+</View>
+        </View>
         <Spacer />
-        <Text style={styles.text}>Service Name:</Text>
-        <TextInput
-          value={serviceName}
-          onChangeText={setServiceName}
-          style={styles.textInput}
-        />
-        <Text style={styles.text}>Description:</Text>
-        <TextInput
-          value={description}
-          onChangeText={setDescription}
-          style={styles.textInput}
-        />
-        {/* <Text>Customer Name:</Text>
-      <TextInput value={customerName} onChangeText={setCustomerName} />
-      <Text>Customer Address:</Text>
-      <TextInput value={customerAddress} onChangeText={setCustomerAddress} />
-      <Text>Time:</Text>
-      <TextInput value={time} onChangeText={setTime} /> */}
-        {/* <TouchableOpacity onPress={handleSelectImage}>
-        <Text>Select Image</Text>
-      </TouchableOpacity>
-      {imageData && (
-        <Image
-          source={{ uri: imageData.uri }}
-          style={{ width: 200, height: 200 }}
-        />
-      )} */}
-        <Spacer />
+      <Button title="Save" onPress={()=>{validateValues()}} />
       </View>
-      <Button title="Save" onPress={handleSave} />
-    </SafeAreaView>
+   
   );
 };
 const styles = StyleSheet.create({

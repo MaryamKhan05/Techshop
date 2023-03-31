@@ -38,6 +38,7 @@ const styles= StyleSheet.create({
 alignSelf:'center',
 justifyContent:'center',
 alignItems:'center',
+elevation:5
 
 
     },

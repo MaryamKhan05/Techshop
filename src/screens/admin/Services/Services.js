@@ -7,19 +7,26 @@ import {
 } from "react-native-responsive-screen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Button from "../../../components/Button/Button";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../../../firebase.config";
 const Services = ({ navigation }) => {
   const [adminServices, setAdminServices] = useState([]);
-
+const[data,setData]=useState([])
   useEffect(() => {
+   
+
     const getServices = async () => {
-      const existingServices = await AsyncStorage.getItem("services");
-      if (existingServices) {
-        const services = JSON.parse(existingServices).filter(
-          (service) => service !== null
-        );
-        setAdminServices(services);
-      }
+      const d = [];
+      const dbRef = collection(db, 'Services');
+      const querySnapshot = await getDocs(dbRef);
+    
+      querySnapshot.forEach((doc) => {
+        d.push(doc.data());
+      });
+    
+      setData(d);
     };
+
     getServices();
   }, []);
 
@@ -85,12 +92,15 @@ const Services = ({ navigation }) => {
         <Text style={styles.serviceName}>{item.serviceName}</Text>
         <Text style={styles.serviceDescription}>{item.description}</Text>
         <View style={styles.serviceButtons}>
+          <View style={{marginHorizontal:hp('1%')}}>
+
           <Button
             title="Edit"
             width={wp("20")}
             height={hp("4.4")}
             onPress={() => handleEditService(item)}
           />
+          </View>
           <Button
             width={wp("20")}
             height={hp("4.4")}
@@ -111,13 +121,13 @@ const Services = ({ navigation }) => {
       >
       <FlatList
         showsVerticalScrollIndicator={false}
-        data={adminServices}
-        keyExtractor={(item) => item.id.toString()}
+        data={data}
+        keyExtractor={(item) => item.image}
         renderItem={renderItem}
       />
       <Button
         title="Add Service"
-        onPress={() => navigation.navigate("AddService", { handleAddService })}
+        onPress={() => navigation.navigate("AddService")}
       />
       </View>
     </SafeAreaView>

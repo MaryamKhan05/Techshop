@@ -17,7 +17,9 @@ import CustomerDrawer from "./src/navigations/customer/CustomerDrawer";
 import CustomerNavigations from "./src/navigations/customer/CustomerNavigations";
 import MainAppRoutes from "./src/navigations/approutes/AppMainRoutes";
 
+
 export default function App() {
+
   return (
   <MainAppRoutes/>
   // <CustomerDrawer/>

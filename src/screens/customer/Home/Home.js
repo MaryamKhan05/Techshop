@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 
 import {
   View,
@@ -24,12 +24,33 @@ import Colors from "../../../config/colors/Colors";
 import CommonStyles from "../../../config/styles/styles";
 import { Services } from "../Services/DummyServices";
 import { SpareParts } from "../SpareParts/DummyDate";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../../../firebase.config";
 
 const Home = ({ navigation }) => {
   const [search, setSearch] = useState("");
   const searchService = (text) => {
     console.log("Text Is " + text);
   };
+  const[data,setData]=useState([])
+  useEffect(() => {
+   
+
+    const getServices = async () => {
+      const d = [];
+    
+      const dbRef = collection(db, 'Services');
+      const querySnapshot = await getDocs(dbRef);
+    
+      querySnapshot.forEach((doc) => {
+        d.push(doc.data());
+      });
+    
+      setData(d);
+    };
+
+    getServices();
+  }, []);
   return (
     <View style={[CommonStyles.container, { justifyContent: "space-between" }]}>
       <View style={styles.headerView}>
@@ -59,16 +80,16 @@ const Home = ({ navigation }) => {
             </TouchableOpacity>
           </View>
           <HorizontalList
-            Data={Services}
+            Data={data}
             renderItem={({ item }) => {
               return (
                 <View style={{ paddingHorizontal: hp("2%") }}>
                   <ServiceCard
                     image={item.image}
-                    name={item.name}
+                    name={item.serviceName}
                     onPress={() => {
                       navigation.navigate("RequestService", {
-                        name: item.name,
+                        name: item.serviceName,
                       });
                     }}
                   />
@@ -76,7 +97,7 @@ const Home = ({ navigation }) => {
               );
             }}
             keyExtractor={(item) => {
-              return item.id.toString();
+              return item.image;
             }}
           />
         </View>
