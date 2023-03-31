@@ -134,6 +134,7 @@ const AddParts = ({ navigation, route }) => {
     setImageData(null);
     const handleAddParts = route.params.handleAddParts;
     handleAddParts(newParts);
+    // console.log('newparts are', newParts)
     navigation.goBack();
   };
 

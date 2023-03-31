@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import { View, Text, StyleSheet, FlatList,Alert } from "react-native";
 import Button from "../../../components/Button/Button";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 // const SparePartsReq = ({ navigation }) => {
 //   const [parts, setParts] = useState([]);
 //   useEffect(() => {
@@ -46,25 +46,110 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 //     </View>
 //   );
 // };
+
+
+
 const SparePartsReq = ({ navigation }) => {
   const [parts, setParts] = useState([]);
+
+
+
+
+
 
   useEffect(() => {
     const getParts = async () => {
       const existingParts = await AsyncStorage.getItem("spareparts");
+
+      console.log('existing parts are ', existingParts)
       if (existingParts) {
-        const Parts = JSON.parse(existingParts).filter(
+        const spareparts = JSON.parse(existingParts).filter(
           (part) => part !== null
         );
-        setParts(Parts);
+        setParts(spareparts);
       }
     };
     getParts();
   }, []);
 
+
+
+
+
+
+  // FUNCTION TO ADD NEW SPARE PARTS 
   const handleAddParts = (newParts) => {
+    console.log('parts received on spare screen', newParts)
     setParts([...parts, newParts]);
   };
+
+
+
+
+
+
+
+
+//FUNCTION TO DELETE THE EXISTING SPARE PARTS
+const handleDelete = async (item) => {
+  Alert.alert(
+    "Delete Service",
+    "Are you sure you want to delete this service?",
+    [
+      {
+        text: "Cancel",
+        style: "cancel",
+        onPress: () => console.log("cencal pressed"),
+      },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: async () => {
+          const updatedParts = parts.filter(
+            (service) => service.id !== item.id
+          );
+          setParts(updatedParts);
+          await AsyncStorage.setItem(
+            "spareparts",
+            JSON.stringify(updatedParts)
+          );
+        },
+      },
+    ],
+    { cancelable: true }
+  );
+};
+
+
+
+
+
+
+
+//FUNCTION TO EDIT A EXISTING SPARE PART
+const handleEditService = (item) => {
+  navigation.navigate("EditSpareParts", { item, handleUpdateSpareParts });
+};
+const handleUpdateSpareParts = async (updatedService) => {
+  // Find the index of the service to be updated
+  const index = parts.findIndex(
+    (service) => service.id === updatedService.id
+  );
+  // Create a new array with the updated service at the correct index
+  const updatedServices = [
+    ...parts.slice(0, index),
+    updatedService,
+    ...parts.slice(index + 1),
+  ];
+  // Update the state with the new array of services
+  setParts(updatedServices);
+  // Store the updated services array in async storage
+  await AsyncStorage.setItem("spareparts", JSON.stringify(updatedServices));
+};
+
+
+
+
   const renderItem = ({ item }) => (
     <View style={styles.serviceItem}>
       {/* <Image source={{ uri: item.image }} style={styles.serviceImage} /> */}

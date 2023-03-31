@@ -13,6 +13,7 @@ import AddService from "../../screens/admin/Services/AddServices";
 import EditService from "../../screens/admin/Services/EditServices";
 import Detail from "../../screens/admin/ServiceDetail/ServiceDetail";
 import AddParts from "../../screens/admin/SparePartsReq/AddSpareParts";
+import EditSpareParts from "../../screens/admin/SparePartsReq/EditSpareParts";
 
 const Stack = createStackNavigator();
 
@@ -69,6 +70,11 @@ const AdminStack = () => {
         <Stack.Screen
           name="AddParts"
           component={AddParts}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="EditSpareParts"
+          component={EditSpareParts}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
