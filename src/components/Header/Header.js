@@ -13,29 +13,30 @@ const Header = ({ headerTitle }) => {
       style={{
         flexDirection: "row",
         alignItems: "center",
+        margin: hp("1.5"),
+        marginHorizontal: hp("2"),
       }}
     >
       <TouchableOpacity onPress={() => navigation.goBack()}>
         <Ionicons name="arrow-back" size={hp("3")} />
       </TouchableOpacity>
       <View
-      style={{
-        alignSelf:'center',
-        flex:1
-      }}
-      >
-
-      <Text
         style={{
+          alignSelf: "center",
+          flex: 1,
+        }}
+      >
+        <Text
+          style={{
             fontSize: hp("2.5"),
             fontWeight: "700",
             textAlign: "center",
             marginHorizontal: hp("10"),
-        }}
+          }}
         >
-        {headerTitle}
-      </Text>
-          </View>
+          {headerTitle}
+        </Text>
+      </View>
     </View>
   );
 };

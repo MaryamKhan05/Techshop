@@ -80,6 +80,9 @@ import {
   TouchableOpacity,
   StyleSheet,
   View,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
@@ -93,6 +96,8 @@ import Button from "../../../components/Button/Button";
 import Colors from "../../../config/colors/Colors";
 import { Spacer } from "../../../components/Spacer/Spacer";
 import Header from "../../../components/Header/Header";
+import Input from "../../../components/Input/Input";
+import CommonStyles from "../../../config/styles/styles";
 
 const AddParts = ({ navigation, route }) => {
   const [requestDate, setRequestDate] = useState("");
@@ -100,6 +105,8 @@ const AddParts = ({ navigation, route }) => {
   const [customerName, setCustomerName] = useState("");
   const [customerAddress, setCustomerAddress] = useState("");
   const [time, setTime] = useState("");
+  const [company, setCompany] = useState("");
+  const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
   const [imageData, setImageData] = useState(null);
 
@@ -113,13 +120,15 @@ const AddParts = ({ navigation, route }) => {
       time,
       description,
       imageData,
+      company,
+      price,
     };
 
     const existingParts = await AsyncStorage.getItem("spareparts");
     let spareparts = [];
 
     if (existingParts) {
-        spareparts = JSON.parse(existingParts);
+      spareparts = JSON.parse(existingParts);
     }
 
     spareparts.push(newParts);
@@ -131,6 +140,8 @@ const AddParts = ({ navigation, route }) => {
     setCustomerAddress("");
     setTime("");
     setDescription("");
+    setCompany("");
+    setPrice("");
     setImageData(null);
     const handleAddParts = route.params.handleAddParts;
     handleAddParts(newParts);
@@ -158,51 +169,57 @@ const AddParts = ({ navigation, route }) => {
     });
   };
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: Colors.white,
-      }}
-    >
-   
-      <View
-        style={{
-          padding: hp("2"),
-          flex: 0.9,
-        }}
+    <SafeAreaView style={[CommonStyles.container, {  }]}>
+      <ScrollView
+        // keyboardShouldPersistTaps="handled"
+        // contentContainerStyle={{ padding: 10 }}
+        showsVerticalScrollIndicator={false}
       >
-        <Header headerTitle="Add New Service" />
-        <Spacer />
-        <Text style={styles.text}>Part Name:</Text>
-        <TextInput
-          value={serviceName}
-          onChangeText={setServiceName}
-          style={styles.textInput}
-        />
-        <Text style={styles.text}>Description:</Text>
-        <TextInput
-          value={description}
-          onChangeText={setDescription}
-          style={styles.textInput}
-        />
-        {/* <Text>Customer Name:</Text>
-      <TextInput value={customerName} onChangeText={setCustomerName} />
-      <Text>Customer Address:</Text>
-      <TextInput value={customerAddress} onChangeText={setCustomerAddress} />
-      <Text>Time:</Text>
-      <TextInput value={time} onChangeText={setTime} /> */}
-        {/* <TouchableOpacity onPress={handleSelectImage}>
-        <Text>Select Image</Text>
-      </TouchableOpacity>
-      {imageData && (
-        <Image
-          source={{ uri: imageData.uri }}
-          style={{ width: 200, height: 200 }}
-        />
-      )} */}
-        <Spacer />
-      </View>
-      <Button title="Save" onPress={handleSave} />
+        <KeyboardAvoidingView
+        // behavior={Platform.OS =  1   == 'ios' ? 'padding' : 'height'}
+        >
+          <View
+            style={{
+              // padding: hp("2"),
+              // flex: 0.9,
+            }}
+          >
+            <Header headerTitle="Add New Service" />
+            <Spacer />
+            {/* <Text style={styles.text}>Part Name:</Text> */}
+            <Input
+              title={"Part Name"}
+              value={serviceName}
+              onChangeText={setServiceName}
+              style={styles.textInput}
+              placeholder="Enter Spare Part Name"
+            />
+            <Input
+              title={"Description"}
+              value={description}
+              onChangeText={setDescription}
+              style={styles.textInput}
+              placeholder="Description"
+            />
+            <Input
+              title={"Company Name"}
+              value={company}
+              onChangeText={setCompany}
+              style={styles.textInput}
+              placeholder="Enter Company's Name"
+            />
+            <Input
+              title={"Price"}
+              value={price}
+              onChangeText={setPrice}
+              style={styles.textInput}
+              placeholder="Enter Price"
+            />
+            <Spacer />
+          </View>
+          <Button title="Save" onPress={handleSave} />
+        </KeyboardAvoidingView>
+      </ScrollView>
     </SafeAreaView>
   );
 };

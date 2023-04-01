@@ -9,21 +9,21 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Button from "../../../components/Button/Button";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../../../firebase.config";
+import Card from "../../../components/Card/Card";
+import Colors from "../../../config/colors/Colors";
 const Services = ({ navigation }) => {
   const [adminServices, setAdminServices] = useState([]);
-const[data,setData]=useState([])
+  const [data, setData] = useState([]);
   useEffect(() => {
-   
-
     const getServices = async () => {
       const d = [];
-      const dbRef = collection(db, 'Services');
+      const dbRef = collection(db, "Services");
       const querySnapshot = await getDocs(dbRef);
-    
+
       querySnapshot.forEach((doc) => {
         d.push(doc.data());
       });
-    
+
       setData(d);
     };
 
@@ -86,49 +86,77 @@ const[data,setData]=useState([])
     await AsyncStorage.setItem("services", JSON.stringify(updatedServices));
   };
   const renderItem = ({ item }) => (
-    <View style={styles.serviceItem}>
-      <Image source={{ uri: item.image }} style={styles.serviceImage} />
-      <View style={styles.serviceDetails}>
-        <Text style={styles.serviceName}>{item.serviceName}</Text>
-        <Text style={styles.serviceDescription}>{item.description}</Text>
-        <View style={styles.serviceButtons}>
-          <View style={{marginHorizontal:hp('1%')}}>
-
-          <Button
-            title="Edit"
-            width={wp("20")}
-            height={hp("4.4")}
-            onPress={() => handleEditService(item)}
-          />
+    <View
+      style={{
+        margin: hp("1"),
+      }}
+    >
+      <Card>
+        <View
+          style={{
+            width: wp("90"),
+            // padding:hp("1")
+          }}
+        >
+          <View
+            style={{
+              flexDirection: "row",
+            }}
+          >
+            <View>
+              <Image source={{ uri: item.image }} style={styles.serviceImage} />
+            </View>
+            <View style={styles.serviceDetails}>
+              <Text style={styles.serviceName}>{item.serviceName}</Text>
+              <Text style={styles.serviceDescription}>{item.description}</Text>
+            </View>
           </View>
-          <Button
-            width={wp("20")}
-            height={hp("4.4")}
-            title="Delete"
-            onPress={() => handleDelete(item)}
-          />
+          <View style={styles.serviceButtons}>
+            <View style={{ marginHorizontal: hp("1%") }}>
+              <Button
+                title="Edit"
+                width={wp("20")}
+                height={hp("4.4")}
+                onPress={() => handleEditService(item)}
+              />
+            </View>
+            <Button
+              width={wp("20")}
+              height={hp("4.4")}
+              title="Delete"
+              onPress={() => handleDelete(item)}
+            />
+          </View>
         </View>
-      </View>
+      </Card>
     </View>
   );
 
   return (
     <SafeAreaView style={styles.container}>
       <View
-      style={{
-        paddingHorizontal: hp('2'),
-      }}
+        style={{
+          // paddingHorizontal: hp("2"),
+          flex: 1,
+          backgroundColor: Colors.white,
+        }}
       >
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        data={data}
-        keyExtractor={(item) => item.image}
-        renderItem={renderItem}
-      />
-      <Button
-        title="Add Service"
-        onPress={() => navigation.navigate("AddService")}
-      />
+        <View
+          style={{
+            flex: 0.95,
+          }}
+        >
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            data={data}
+            keyExtractor={(item) => item.image}
+            renderItem={renderItem}
+          />
+        </View>
+        <Button
+          title="Add Service"
+          onPress={() => navigation.navigate("AddService")}
+        />
       </View>
     </SafeAreaView>
   );
@@ -137,7 +165,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-    
   },
   title: {
     fontSize: 24,
@@ -158,10 +185,12 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   serviceDetails: {
-    flex: 1,
-    justifyContent: "space-between",
-    paddingTop: 5,
-    paddingBottom: 5,
+    // flex: 1,
+    // justifyContent: "space-between",
+    // paddingTop: 5,
+    // paddingBottom: 5,
+    width: wp("67"),
+    // backgroundColor: "pink",
   },
   serviceName: {
     fontSize: 18,
@@ -194,6 +223,8 @@ const styles = StyleSheet.create({
     alignSelf: "flex-end",
     // padding:5,
     justifyContent: "space-between",
+    alignSelf: "center",
+    marginTop: hp("1.5"),
     // justifyContent: "flex-end",
   },
 });

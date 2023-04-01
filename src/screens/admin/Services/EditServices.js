@@ -9,7 +9,8 @@ import {
 import Button from "../../../components/Button/Button";
 import Colors from "../../../config/colors/Colors";
 import { Spacer } from "../../../components/Spacer/Spacer";
-import  Header  from "../../../components/Header/Header";
+import Header from "../../../components/Header/Header";
+import Input from "../../../components/Input/Input";
 const EditService = ({ route, navigation }) => {
   const { item, handleUpdateService } = route.params;
   const [serviceName, setServiceName] = useState(item.serviceName);
@@ -36,12 +37,14 @@ const EditService = ({ route, navigation }) => {
   };
   return (
     <SafeAreaView style={styles.container}>
-      <Header headerTitle='Edit'/>
-      <Spacer/>
+      <Header headerTitle="Edit" />
+      <Spacer />
       <View
-        style={{
-          flex: 0.9,
-        }}
+        style={
+          {
+            flex: 0.9,
+          }
+        }
       >
         {/* <Image
           source={{ uri: item.image }}
@@ -51,15 +54,16 @@ const EditService = ({ route, navigation }) => {
             backgroundColor: "pink",
           }}
         /> */}
-        <Text style={styles.text}>Service Name:</Text>
-        <TextInput
-          style={styles.textInput}
+        <Input
+          // style={styles.textInput}
+          title={"Service Name"}
+          placeholder={"Enter Service Name"}
           onChangeText={(text) => setServiceName(text)}
           value={serviceName}
         />
-        <Text style={styles.text}>Description:</Text>
-        <TextInput
-          style={styles.textInput}
+        <Input
+          title={"Service Name"}
+          placeholder={"Enter Service Name"}
           onChangeText={(text) => setDescription(text)}
           value={description}
         />
@@ -72,8 +76,8 @@ const EditService = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor:Colors.white
+    // padding: 20,
+    backgroundColor: Colors.white,
   },
   label: {
     fontSize: 18,
