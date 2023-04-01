@@ -2,7 +2,7 @@ export const AdminServices = [
   {
     id: 0,
     requestDate: "02/04/2023",
-    serviceName: "Tire Change",
+    serviceName: "Tyre Change",
     customerName: "Nouman Habibbb",
     customerAdress: "Islamabad",
     time: "10:00am",

@@ -14,6 +14,7 @@ import EditService from "../../screens/admin/Services/EditServices";
 import Detail from "../../screens/admin/ServiceDetail/ServiceDetail";
 import AddParts from "../../screens/admin/SparePartsReq/AddSpareParts";
 import EditSpareParts from "../../screens/admin/SparePartsReq/EditSpareParts";
+import RequestApprovalScreen from "../../screens/admin/ServiceDetail/RequestApproval";
 
 const Stack = createStackNavigator();
 
@@ -66,6 +67,11 @@ const AdminStack = () => {
           name="Detail"
           component={Detail}
           options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="RequestApprovalScreen"
+          component={RequestApprovalScreen}
+          options={{ headerTitle: 'Assign TechShop Professional',headerTitleAlign:'center' }}
         />
         <Stack.Screen
           name="AddParts"

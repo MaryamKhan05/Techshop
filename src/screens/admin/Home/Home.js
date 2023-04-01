@@ -48,19 +48,14 @@ const Home = ({ navigation }) => {
             <View style={{ paddingHorizontal: hp("2%") }}>
               <AdminServiceCard
                 service={item.serviceName}
-                customer={item.customerName}
-                address={item.customerAdress}
+               
+                
                 image={item.image}
                 width={hp("20")}
-                time={item.time}
+              
                 onPress={() => {
                   navigation.navigate("Detail", {
-                    name: item.serviceName,
-                    customer: item.customerName,
-                    address: item.customerAdress,
-                    time: item.time,
-                    desc: item.description,
-                    image: item.image,
+                    reuqestCategory: item.serviceName
                   });
                 }}
               />

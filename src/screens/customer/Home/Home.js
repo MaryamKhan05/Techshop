@@ -90,6 +90,9 @@ const Home = ({ navigation }) => {
                     onPress={() => {
                       navigation.navigate("RequestService", {
                         name: item.serviceName,
+                        charges: item.serviceCharges,
+                        reuqestCategory: item.reuqestCategory
+
                       });
                     }}
                   />
