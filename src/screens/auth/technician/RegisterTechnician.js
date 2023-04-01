@@ -4,9 +4,12 @@ import {View,Text, TouchableOpacity,Image} from 'react-native'
 import Button from "../../../components/Button/Button";
 import Input from "../../../components/Input/Input";
 import CommonStyles from "../../../config/styles/styles";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {widthPercentageToDP as wp,heightPercentageToDP as hp} from 'react-native-responsive-screen'
 import Colors from "../../../config/colors/Colors";
+import { auth, db } from "../../../../firebase.config";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 const RegisterScreen=({navigation})=>{
 
     const[email,setEmail]=useState('')
@@ -14,6 +17,41 @@ const RegisterScreen=({navigation})=>{
     const[name,setName]=useState('')
     const[location,setLocation]=useState('Shamsabad Rawalpindi')
     const[PhoneNo,setPhoneNo]=useState('')
+    const isValidEmail=(email)=>{
+      const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const test = pattern.test(email);
+      return test
+    }
+  
+    const RegisterTechnician=()=>{
+      
+      const validEmail= isValidEmail(email)
+      if(email===''){return alert('Email Is Required')}
+      if(name===''){return alert('Name Is Required')}
+      if(PhoneNo===''){return alert('Contact No Is Required')}
+      if(password===''){return alert('Password Is Required')}
+      if(!validEmail){return alert('Provide a Valid Email')}
+      else{
+        createUserWithEmailAndPassword(auth, email, password)
+        .then(async(userCredential)=>{
+          const uid= userCredential.user.uid
+          await AsyncStorage.setItem('UserType', 'Technician')
+          await setDoc(doc(db, "Technicians", uid),{
+            uid,
+            name,
+            email:email.toLocaleLowerCase(),
+            PhoneNo,
+            location,
+            type: 'Technician'
+          })
+          
+        }).catch((err)=>{
+          console.log(err)
+          alert('Something Went Wrong')
+        })
+      }
+    }
+  
     return(
 <View style={[CommonStyles.container,{}]}>
    
@@ -85,7 +123,7 @@ resizeMode='contain'
     title={'Register'}
     borderRadius={10}
     width={wp('50%')}
-   onPress={()=>{navigation.navigate('AssignedWork')}}
+   onPress={()=>{RegisterTechnician()}}
    
     />
 </View>

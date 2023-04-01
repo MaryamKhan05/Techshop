@@ -41,11 +41,11 @@ const RegisterScreen=({navigation})=>{
           await setDoc(doc(db, "Customers", uid),{
             uid,
             name,
-            email,
+            email:email.toLocaleLowerCase(),
             PhoneNo,
             type: 'Customer'
           })
-          alert('User Registered')
+         
         }).catch((err)=>{
           console.log(err)
           alert('Something Went Wrong')

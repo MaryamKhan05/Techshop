@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, Modal, ActivityIndicator } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -19,11 +19,34 @@ import {
 import { db } from "../../../../firebase.config";
 import HorizontalList from "../../../components/HorizontalList/HorizontalList";
 import Header from "../../../components/Header/Header";
+import { Picker } from '@react-native-picker/picker';
 const Detail = ({ navigation, route }) => {
   const { reuqestCategory } = route.params;
-
+  const [selectedValue, setSelectedValue] = useState('');
   const [data, setData] = useState([]);
+  const [techsData, setTechsData] = useState([]);
+const[serviceId,setServiceId]=useState('')
   const [loading, setLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalLoader, setModalLoader] = useState(false);
+  useEffect(() => {
+    const fetchTechnicians = async () => {
+      const dbref = collection(db, "Technicians");
+      // const q = query(
+      //   dbref,
+      //   where("requestCategory", "==", reuqestCategory),
+      //   where("status", "==", "pending")
+      // );
+
+      const querySnapshot = await getDocs(dbref);
+      const TechniciansData = querySnapshot.docs.map((doc) => doc.data());
+
+      setTechsData(TechniciansData);
+      
+    };
+   
+    fetchTechnicians();
+  }, []);
   useEffect(() => {
     const fetchRequests = async () => {
       setLoading(true);
@@ -111,14 +134,16 @@ const Detail = ({ navigation, route }) => {
                 title={"Approve"}
                 width={wp("30%")}
                 onPress={() => {
-                  navigation.navigate("RequestApprovalScreen");
+                  setServiceId(item.serviceId)
+                  setModalVisible(!modalVisible)
+                 // navigation.navigate("RequestApprovalScreen");
                 }}
               />
               <Button
                 title={"Reject"}
                 width={wp("30%")}
                 onPress={() => {
-                  rejectUserRequest();
+                  rejectUserRequest(item.serviceId);
                 }}
               />
             </View>
@@ -127,6 +152,105 @@ const Detail = ({ navigation, route }) => {
       </View>
     );
   };
+  const assignTech = async () => {
+    console.log("serviceId:", serviceId);
+    if (selectedValue === '') {
+      return alert('Please Select A Technician First! ');
+    } else {
+      setModalLoader(true);
+      const dbref = collection(db, "Technicians");
+      const q = query(
+        dbref,
+        where("uid", "==", selectedValue)
+      );
+  
+      const querySnapshot = await getDocs(q);
+      const TechnicianInfoArr = querySnapshot.docs.map((doc) => doc.data());
+      const techName = TechnicianInfoArr[0].name;
+      const techPhoneNo = TechnicianInfoArr[0].PhoneNo;
+      const techuid = TechnicianInfoArr[0].uid;
+  
+      const serviceDocRef = collection(db, "ServiceRequests");
+      const q2 = query(serviceDocRef, where("serviceId", "==",   serviceId.toString()));
+      getDocs(q2).then((val)=>val.docs.map((doc)=>{console.log("data found",doc.data())}))
+      await updateDoc(q2, {
+        status: "approved",
+        assignedTo: techName,
+        techContact: techPhoneNo,
+        techId: techuid
+      });
+    }
+    setModalLoader(false);
+    setModalVisible(false);
+  };
+  
+  const AssignTechModal=()=>{
+   
+    return(
+     
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            {
+              modalLoader && <ActivityIndicator
+              style={{alignSelf:'center'}}
+              color={Colors.deepBlue}
+              size={'small'}
+              
+              />
+            }
+            {
+              modalLoader ? <Text style={styles.modalText}>Assigning</Text>:
+<View>
+<Text style={styles.modalText}>One More Step</Text>
+            <Text style={styles.modalText}>Assign A Technician</Text>
+  </View>
+            }
+            
+            <View>
+      <Picker
+        selectedValue={selectedValue}
+
+        onValueChange={(itemValue,itemLabel) =>{
+          console.log(itemLabel)
+          setSelectedValue(itemValue)
+        }
+        }>
+          <Picker.Item label="Please Select A Technician" value="" />
+          {
+            techsData.map((item,index)=>{
+              return(
+                <Picker.Item key={index} label={item.name} value={item.uid} />
+              )
+            })
+          }
+       
+        {/* <Picker.Item label="Option 2" value="option2" />
+        <Picker.Item label="Option 3" value="option3" /> */}
+      </Picker>
+     <View style={{marginVertical:hp('2%')}}>
+
+      <Button
+      width={wp('70%')}
+      borderRadius={7}
+      title={"Assign"}
+      onPress={()=>{assignTech()}}
+      />
+     </View>
+    </View>
+          </View>
+        </View>
+      </Modal>
+
+    )
+  }
   return (
     <SafeAreaView
       style={{
@@ -136,6 +260,7 @@ const Detail = ({ navigation, route }) => {
       }}
     >
       {/* <Spacer /> */}
+      <AssignTechModal/>
       <Header headerTitle="Customer Details" />
       {/* <Text
         style={{
@@ -177,6 +302,30 @@ const styles = StyleSheet.create({
     color: Colors.deepBlue,
     // backgroundColor:'red',
     // width: wp("70%"),
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    height: hp('50%'),
+    width:wp('80%'),
+    backgroundColor: 'white',
+    borderRadius: 20,
+    justifyContent:'space-evenly',
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
   },
 });
 

@@ -1,5 +1,5 @@
 import "react-native-gesture-handler";
-import React, { useContext } from "react";
+import React, { useContext,useEffect,useState } from "react";
 import { StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -15,13 +15,44 @@ import Detail from "../../screens/admin/ServiceDetail/ServiceDetail";
 import AddParts from "../../screens/admin/SparePartsReq/AddSpareParts";
 import EditSpareParts from "../../screens/admin/SparePartsReq/EditSpareParts";
 import RequestApprovalScreen from "../../screens/admin/ServiceDetail/RequestApproval";
-
+import LoginScreen from "../../screens/auth/admin/AdminLogin";
+import { onAuthStateChanged } from 'firebase/auth'
+import { auth } from '../../../firebase.config'
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const Stack = createStackNavigator();
 
 const AdminStack = () => {
+
+  const [user,setUser]=useState('')
+  useEffect(()=>{
+const checkUser=()=>{
+const subscriber=  onAuthStateChanged(auth, (userExists)=>{
+      if(userExists){
+AsyncStorage.getItem('userType').then((val)=>{
+if(val=='Admin'){
+  setUser(userExists)
+}
+else{
+  setUser('')
+}
+})
+       
+     }
+      else{
+        setUser('')
+      }
+     
+      return subscriber
+    })
+}
+checkUser()
+  },[])
   return (
    
       <Stack.Navigator>
+      {user? 
+<Stack.Group>
+
 
         <Stack.Screen
           name="AdminDrawer"
@@ -83,6 +114,16 @@ const AdminStack = () => {
           component={EditSpareParts}
           options={{ headerShown: false }}
         />
+        </Stack.Group>:
+         <Stack.Group>
+         <Stack.Screen
+           name="LoginScreen"
+           component={LoginScreen}
+           options={{ headerShown: false }}
+         />
+         </Stack.Group>
+         
+        }
       </Stack.Navigator>
  
   );

@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useState,useEffect} from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
 
@@ -13,12 +13,43 @@ import { TouchableOpacity ,View} from 'react-native'
 import Colors from '../../config/colors/Colors'
 import LoginScreen from '../../screens/auth/technician/LoginTechnician'
 import RegisterScreen from '../../screens/auth/technician/RegisterTechnician'
+import { onAuthStateChanged } from 'firebase/auth'
+import { auth } from '../../../firebase.config'
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const stack= createNativeStackNavigator()
 const TechnicianNavigation=()=>{
     const navigation=useNavigation()
+    
+  const [user,setUser]=useState('')
+  useEffect(()=>{
+const checkUser=()=>{
+const subscriber=  onAuthStateChanged(auth, (userExists)=>{
+      if(userExists){
+AsyncStorage.getItem('userType').then((val)=>{
+if(val=='Technician'){
+  setUser(userExists)
+}
+else{
+  setUser('')
+}
+})
+       
+     }
+      else{
+        setUser('')
+      }
+     
+      return subscriber
+    })
+}
+checkUser()
+  },[])
     return(
         <stack.Navigator screenOptions={{headerShown:false}}>
-       <stack.Screen component={LoginScreen} name="LoginScreen" />
+          { user ? 
+            <stack.Group>
+
+           
             <stack.Screen component={RegisterScreen} name="RegisterScreen" />
             <stack.Screen component={AssignedWork} name="AssignedWork" options={{
                 headerShown:true,
@@ -52,7 +83,11 @@ const TechnicianNavigation=()=>{
             <stack.Screen component={TechnicianWallet} name="TechnicianWallet" options={{headerShown:true,headerTitle:'TechShop', headerTitleAlign:'center'}}/>
             <stack.Screen component={TechnicianProfile} name="TechnicianProfile" options={{headerShown:true,headerTitle:'TechShop', headerTitleAlign:'center'}}/>
             <stack.Screen component={TechnicianWorkHistory} name="TechnicianWorkHistory" options={{headerShown:true,headerTitle:'TechShop', headerTitleAlign:'center'}}/>
-    
+            </stack.Group>:
+            <stack.Group>
+            <stack.Screen component={LoginScreen} name="LoginScreen" />
+     
+                 </stack.Group>}
         </stack.Navigator>
     )
 }
