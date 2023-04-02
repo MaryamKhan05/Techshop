@@ -28,14 +28,15 @@ const AdminStack = () => {
 const checkUser=()=>{
 const subscriber=  onAuthStateChanged(auth, (userExists)=>{
       if(userExists){
-AsyncStorage.getItem('userType').then((val)=>{
-if(val=='Admin'){
-  setUser(userExists)
-}
-else{
-  setUser('')
-}
-})
+        setUser(userExists)
+// AsyncStorage.getItem('userType').then((val)=>{
+// if(val=='Admin'){
+//   setUser(userExists)
+// }
+// else{
+//   setUser('')
+// }
+// })
        
      }
       else{

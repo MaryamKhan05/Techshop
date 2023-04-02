@@ -34,20 +34,20 @@ const TechnicianCard=(
     
 </View>
 
-<View style={{flexDirection:'row',justifyContent:'space-between',padding: hp('1.5%')}}>
+<View style={{flexDirection:'column',alignItems:'center',justifyContent:'space-between',padding: hp('1.5%')}}>
     <Text style={{color: Colors.black, fontSize: 16,fontWeight:'bold'}}>{customerName}'s Address:</Text>
-    <Text style={{color: Colors.black, fontSize: 14,fontWeight:'bold'}}>{customerAdress}</Text>
+    <Text style={{color: Colors.black, fontSize: 14,fontWeight:'bold',textAlign:'center'}}>{customerAdress}</Text>
 </View>
-<View style={{flexDirection:'row',justifyContent:'space-between',padding: hp('1.5%')}}>
+<View style={{flexDirection:'column',alignItems:'center',justifyContent:'space-between',padding: hp('1.5%')}}>
     <Text style={{color: Colors.black, fontSize: 16,fontWeight:'bold'}}>{customerName}'s Contact</Text>
     <Text style={{color: Colors.black, fontSize: 14,fontWeight:'bold'}}>{customerContact}</Text>
 </View>
-<View style={{flexDirection:'row',justifyContent:'space-between',padding: hp('1.5%')}}>
+<View style={{flexDirection:'column',alignItems:'center',justifyContent:'space-between',padding: hp('1.5%')}}>
 
     <Text style={{color: Colors.black, fontSize: 16,fontWeight:'bold'}}>Date</Text>
     <Text style={{color: Colors.black, fontSize: 14,fontWeight:'bold'}}>{requestDate}</Text>
 </View>
-<View style={{flexDirection:'row',justifyContent:'space-between',padding: hp('1.5%')}}>
+<View style={{flexDirection:'column',alignItems:'center',justifyContent:'space-between',padding: hp('1.5%')}}>
     <Text style={{color: Colors.black, fontSize: 16,fontWeight:'bold',textAlign:'justify'}}>Time</Text>
     <Text style={{color: Colors.black, fontSize: 14,fontWeight:'bold',textAlign:'justify'}}>{time}</Text>
 </View>

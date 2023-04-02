@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, StyleSheet, Modal, ActivityIndicator } from "react-native";
+import { View, Text, Image, StyleSheet, Modal, ActivityIndicator, ToastAndroid } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -11,6 +11,8 @@ import Colors from "../../../config/colors/Colors";
 import { Spacer } from "../../../components/Spacer/Spacer";
 import {
   collection,
+  doc,
+  getDoc,
   getDocs,
   query,
   updateDoc,
@@ -67,12 +69,20 @@ const[serviceId,setServiceId]=useState('')
     fetchRequests();
   }, []);
 
-  const rejectUserRequest = (serviceid) => {
+  const rejectUserRequest =async (serviceid) => {
+  
     const dbRef = collection(db, "ServiceRequests");
     const q = query(dbRef, where("serviceId", "==", serviceid));
-    updateDoc(q, {
+    const foundDocs= await getDocs(q)
+    const docIds= foundDocs.docs.map((docs)=>docs.id)
+ const docId=docIds[0]
+ const updateDocRef=doc(db,"ServiceRequests",docId)
+    updateDoc(updateDocRef, {
       status: "cancelled",
-    });
+    }).then(()=>{
+      ToastAndroid.show('Requested Rejected Successfully!',ToastAndroid.SHORT)
+      navigation.goBack()
+    }).catch((err)=>{alert('Something Went Wrong')})
   };
   const renderItem = ({ item }) => {
     return (
@@ -171,14 +181,25 @@ const[serviceId,setServiceId]=useState('')
       const techuid = TechnicianInfoArr[0].uid;
   
       const serviceDocRef = collection(db, "ServiceRequests");
-      const q2 = query(serviceDocRef, where("serviceId", "==",   serviceId.toString()));
-      getDocs(q2).then((val)=>val.docs.map((doc)=>{console.log("data found",doc.data())}))
-      await updateDoc(q2, {
+      const q2 = query(serviceDocRef, where("serviceId", "==",   serviceId));
+   const foundDocs= await getDocs(q2)
+   const docIds= foundDocs.docs.map((docs)=>docs.id)
+const docId=docIds[0]
+const updateDocRef=doc(db,"ServiceRequests",docId)
+    console.log("data found for  ",docId)
+       updateDoc(updateDocRef, {
         status: "approved",
         assignedTo: techName,
         techContact: techPhoneNo,
         techId: techuid
-      });
+      }).then(()=>{
+        ToastAndroid.show('Successfully Assigned',ToastAndroid.SHORT)
+        setModalLoader(false);
+        setModalVisible(false);
+      }).catch((err)=>{
+        console.log(err)
+        alert('Something went wrong')
+      })
     }
     setModalLoader(false);
     setModalVisible(false);

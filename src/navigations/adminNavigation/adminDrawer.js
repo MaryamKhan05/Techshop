@@ -1,5 +1,5 @@
 import React from "react";
-import { TouchableOpacity, StyleSheet, View, Image } from "react-native";
+import { TouchableOpacity, StyleSheet, View, Image, Alert } from "react-native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import Entypo from "react-native-vector-icons/Entypo";
 import AntDesign from "react-native-vector-icons/AntDesign";
@@ -19,6 +19,7 @@ import Services from "../../screens/admin/Services/Services";
 import SparePartsReq from "../../screens/admin/SparePartsReq/SparePartsReq";
 import AddService from "../../screens/admin/Services/AddServices";
 import Colors from "../../config/colors/Colors";
+import { auth } from "../../../firebase.config";
 const Drawer = createDrawerNavigator();
 const size = hp("2.5");
 const color = Colors.deepBlue;
@@ -52,6 +53,31 @@ const AdminDrawer = ({ navigation }) => {
               size={size}
               color={focused ? Colors.white : Colors.deepBlue}
             />
+          ),
+          headerRight: () => (
+            <TouchableOpacity
+              style={{ marginRight: 10 }}
+              onPress={() => {
+                Alert.alert(
+                  'LogOut',
+                  'Do You Want To Logout',
+                  [
+                    {
+                      text: 'Cancel',
+                      onPress: () => console.log('Cancel Pressed'),
+                      style: 'cancel',
+                    },
+                    {
+                      text: 'Logout',
+                      onPress: () => {auth.signOut()},
+                    },
+                  ],
+                  { cancelable: false }
+                );
+              }}
+            >
+              <Ionicons name="log-out-outline" size={30} color={Colors.deepBlue} />
+            </TouchableOpacity>
           ),
           //   headerTitle: () => (
           //     <Image

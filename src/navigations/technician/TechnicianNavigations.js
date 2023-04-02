@@ -26,12 +26,13 @@ const checkUser=()=>{
 const subscriber=  onAuthStateChanged(auth, (userExists)=>{
       if(userExists){
 AsyncStorage.getItem('userType').then((val)=>{
-if(val=='Technician'){
   setUser(userExists)
-}
-else{
-  setUser('')
-}
+// if(val=='Technician'){
+//   setUser(userExists)
+// }
+// else{
+//   setUser('')
+// }
 })
        
      }
@@ -50,7 +51,7 @@ checkUser()
             <stack.Group>
 
            
-            <stack.Screen component={RegisterScreen} name="RegisterScreen" />
+           
             <stack.Screen component={AssignedWork} name="AssignedWork" options={{
                 headerShown:true,
                 headerTitle:'TechShop', 
@@ -86,7 +87,7 @@ checkUser()
             </stack.Group>:
             <stack.Group>
             <stack.Screen component={LoginScreen} name="LoginScreen" />
-     
+            <stack.Screen component={RegisterScreen} name="RegisterScreen" />
                  </stack.Group>}
         </stack.Navigator>
     )

@@ -5,6 +5,7 @@ import Colors from "../../../config/colors/Colors";
 import CommonStyles from "../../../config/styles/styles";
 
 import {widthPercentageToDP as wp,heightPercentageToDP as hp} from 'react-native-responsive-screen'
+import { auth } from "../../../../firebase.config";
 const TechnicianProfile=({navigation})=>{
     return(
 <View style={[CommonStyles.container,{justifyContent:'space-between'}]}>
@@ -53,6 +54,7 @@ resizeMode='contain'
          <Text style={[styles.label,{alignSelf:'center'}]}>My Work History</Text>
     </TouchableOpacity>
     <TouchableOpacity
+    onPress={()=>{auth.signOut()}}
       style={[styles.rowHolder,{justifyContent:'center'}]}
     >
          <Text style={[styles.label,{alignSelf:'center'}]}>Log Out</Text>
