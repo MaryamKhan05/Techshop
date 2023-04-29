@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 
 import {View,Text,TouchableOpacity,StyleSheet,KeyboardAvoidingView} from 'react-native'
 import Input from '../../../components/Input/Input'
@@ -9,11 +9,33 @@ import {Services as services} from './DummyServices'
 
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen'
 import Colors from '../../../config/colors/Colors'
+
+import { getDocs,collection } from 'firebase/firestore'
+import { db } from '../../../../firebase.config'
 const Services=({navigation})=>{
     const [search,setSearch]=useState('')
     const searchService=(text)=>{
         console.log("text recieved",text)
     }
+    const[data,setData]=useState([])
+    useEffect(() => {
+   
+  
+      const getServices = async () => {
+        const d = [];
+      
+        const dbRef = collection(db, 'Services');
+        const querySnapshot = await getDocs(dbRef);
+      
+        querySnapshot.forEach((doc) => {
+          d.push(doc.data());
+        });
+      
+        setData(d);
+      };
+  
+      getServices();
+    }, []);
     return(
         <View style={CommonStyles.container}>
                <View style={styles.headerView}>
@@ -24,7 +46,7 @@ const Services=({navigation})=>{
 borderColor={Colors.white}
 textColor={Colors.white}
 value={search}
-onChangeText={(text)=>{searchService(text)}}
+onChangeText={(text)=>{setSearch(text)}}
 placeholder='Search Any Service...'
 title={'Search'}
 />
@@ -32,24 +54,41 @@ title={'Search'}
             </View>
             <View style={styles.body}>
             <VerticalList
-                    Data={services}
+                    Data={data}
                     renderItem={({item})=>{
                         return(
-                            <View style={{paddingVertical: hp('2%'),paddingHorizontal:hp('1%')}}>
 
+<View style={{paddingVertical: hp('2%'),paddingHorizontal:hp('1%')}}>
 <ServiceCard
-height={hp('25%')}
+// flexdirection={true}
+height={hp('35%')}
 width={wp('40%')}
-image={item.image}
-name={item.name}
-onPress={()=>{navigation.navigate('RequestService',{
-    name: item.name
-})}}
+  image={item.image}
+  name={item.serviceName}
+  desc={item.serviceDescription}
+  onPressSchedule={() => {
+    navigation.navigate("RequestService", {
+      name: item.serviceName,
+      charges: item.serviceCharges,
+      reuqestCategory: item.reuqestCategory
+
+    });
+  }}
+  onPressQuick={() => {
+    navigation.navigate("RequestQuickService", {
+      name: item.serviceName,
+      charges: item.serviceCharges,
+      reuqestCategory: item.reuqestCategory
+
+    });
+  }}
 />
-                                </View>
+</View>
                         )
                     }}
-                    keyExtractor={(item)=>{return item.id.toString()}}
+                    keyExtractor={(item) => {
+                        return item.image;
+                      }}
                     
                     />
             </View>

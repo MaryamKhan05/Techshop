@@ -29,10 +29,27 @@ import { db } from "../../../../firebase.config";
 
 const Home = ({ navigation }) => {
   const [search, setSearch] = useState("");
-  const searchService = (text) => {
-    console.log("Text Is " + text);
-  };
   const[data,setData]=useState([])
+  const[filterServiceData,setFilterServiceData]=useState([])
+  const searchService = (text) => {
+    if(!text){
+setFilterServiceData(data)
+setSearch(text)
+    }
+    else {
+    
+      const filtering= filterServiceData.filter((item)=>{
+        const name= item.serviceName.toLocaleLowerCase()
+        if(name.includes(text)){
+          return item.name
+        }
+      })
+      setFilterServiceData(filtering)
+      setSearch(filtering)
+    }
+  
+   
+  };
   useEffect(() => {
    
 
@@ -47,27 +64,31 @@ const Home = ({ navigation }) => {
       });
     
       setData(d);
+      setFilterServiceData(d)
     };
 
     getServices();
   }, []);
   return (
+        <KeyboardAvoidingView style={{flex:1}} behavior="height">
     <View style={[CommonStyles.container, { justifyContent: "space-between" }]}>
       <View style={styles.headerView}>
-        <KeyboardAvoidingView behavior="position">
           <Input
             borderColor={Colors.white}
             textColor={Colors.white}
             value={search}
             onChangeText={(text) => {
-              searchService(text);
+              
+              searchService(text.toLocaleLowerCase());
             }}
             placeholder="Search Any Service..."
             title={"Search"}
           />
-        </KeyboardAvoidingView>
+     
       </View>
+
       <View style={styles.body}>
+      <ScrollView>
         <View style={styles.containerView}>
           <View style={styles.rowHolder}>
             <Text style={styles.categoryLabel}>Services</Text>
@@ -80,15 +101,26 @@ const Home = ({ navigation }) => {
             </TouchableOpacity>
           </View>
           <HorizontalList
-            Data={data}
+            Data={filterServiceData}
             renderItem={({ item }) => {
               return (
                 <View style={{ paddingHorizontal: hp("2%") }}>
                   <ServiceCard
+                  // flexdirection={true}
+                 
                     image={item.image}
                     name={item.serviceName}
-                    onPress={() => {
+                    desc={item.serviceDescription}
+                    onPressSchedule={() => {
                       navigation.navigate("RequestService", {
+                        name: item.serviceName,
+                        charges: item.serviceCharges,
+                        reuqestCategory: item.reuqestCategory
+
+                      });
+                    }}
+                    onPressQuick={() => {
+                      navigation.navigate("RequestQuickService", {
                         name: item.serviceName,
                         charges: item.serviceCharges,
                         reuqestCategory: item.reuqestCategory
@@ -140,8 +172,10 @@ const Home = ({ navigation }) => {
             }}
           />
         </View>
+      </ScrollView>
       </View>
     </View>
+      </KeyboardAvoidingView>
   );
 };
 
@@ -190,7 +224,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp("2%"),
   },
   containerView: {
-    height: hp("33%"),
+    height: hp("35%"),
     marginVertical: hp("1%"),
     justifyContent: "center",
   },

@@ -11,6 +11,8 @@ import LoginScreen from '../../screens/auth/customer/LoginCustomer'
 import RegisterScreen from '../../screens/auth/customer/RegisterCustomer'
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from '../../../firebase.config'
+import RequestQuickService from '../../screens/customer/QuickService/QuickService'
+
 const stack= createNativeStackNavigator()
 const CustomerNavigations=()=>{
     const [user,setUser]=useState('')
@@ -41,6 +43,7 @@ user ?
                 <stack.Group>
                 <stack.Screen component={CustomerDrawer} name="CustomerDrawer" />
             <stack.Screen component={RequestService} name="RequestService" options={{headerShown:true,headerTitle:'Request Service', headerTitleAlign:'center'}}/>
+            <stack.Screen component={RequestQuickService} name="RequestQuickService" options={{headerShown:true,headerTitle:'Request Service', headerTitleAlign:'center'}}/>
             <stack.Screen component={RequestSparePart} name="RequestSparePart" options={{headerShown:true,headerTitle:'Request Spare Parts', headerTitleAlign:'center'}}/>
                 </stack.Group>
 
