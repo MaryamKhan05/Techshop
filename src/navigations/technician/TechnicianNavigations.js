@@ -16,6 +16,7 @@ import RegisterScreen from '../../screens/auth/technician/RegisterTechnician'
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from '../../../firebase.config'
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import TechnicianMap from '../../screens/technician/Map/Map'
 const stack= createNativeStackNavigator()
 const TechnicianNavigation=()=>{
     const navigation=useNavigation()
@@ -84,6 +85,7 @@ checkUser()
             <stack.Screen component={TechnicianWallet} name="TechnicianWallet" options={{headerShown:true,headerTitle:'TechShop', headerTitleAlign:'center'}}/>
             <stack.Screen component={TechnicianProfile} name="TechnicianProfile" options={{headerShown:true,headerTitle:'TechShop', headerTitleAlign:'center'}}/>
             <stack.Screen component={TechnicianWorkHistory} name="TechnicianWorkHistory" options={{headerShown:true,headerTitle:'TechShop', headerTitleAlign:'center'}}/>
+            <stack.Screen component={TechnicianMap} name="TechnicianMap" options={{headerShown:true,headerTitle:'TechShop', headerTitleAlign:'center'}}/>
             </stack.Group>:
             <stack.Group>
             <stack.Screen component={LoginScreen} name="LoginScreen" />

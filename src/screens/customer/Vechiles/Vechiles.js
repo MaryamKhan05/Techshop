@@ -1,6 +1,6 @@
-import React,{useState} from 'react'
+import React,{useEffect, useState} from 'react'
 
-import {View,Text,TouchableOpacity,StyleSheet,KeyboardAvoidingView, Modal, Linking} from 'react-native'
+import {View,Text,TouchableOpacity,StyleSheet,KeyboardAvoidingView, Modal, Linking, ActivityIndicator} from 'react-native'
 import Input from '../../../components/Input/Input'
 
 import VerticalList from '../../../components/VerticalList/VerticalList'
@@ -9,14 +9,40 @@ import CommonStyles from '../../../config/styles/styles'
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen'
 import Colors from '../../../config/colors/Colors'
 import VechileCard from '../../../components/VechileCard/VehcileCard'
-import { vechiles } from './DummyVechiles'
+// import { vechiles } from './DummyVechiles'
 import Button from '../../../components/Button/Button'
+import { collection,getDocs,where,query } from 'firebase/firestore'
+import { auth ,db} from '../../../../firebase.config'
 
 const Vechiles=({navigation})=>{
     const [search,setSearch]=useState('')
     const[showModal,setShowModal]=useState(false)
     const[message,setMessage]=useState(false)
     const[phoneNo,setPhoneNo]=useState('')
+    const[vechiles,setVechiles]=useState([])
+    const[loading,setLoading]=useState(true)
+    useEffect(()=>{
+        const getUserVechileAds=async()=>{
+
+
+const dbref = collection(db, 'VehicleRequests');
+try {
+    const q = query(dbref,where('status','==','approved'));
+    const querySnapshot = await getDocs(q);
+    const requestsData = querySnapshot.docs.map((doc) => doc.data());
+    console.log('requests  ',requestsData)
+    const filterRequests= requestsData.filter((item)=>{return item.customerId!=auth.currentUser.uid})
+    console.log('filter requests  ',filterRequests)
+   setVechiles(filterRequests)
+} catch (error) {
+    console.log(error);
+}
+setTimeout(() => {
+    setLoading(false)
+}, 1500);
+        }
+        getUserVechileAds()
+    },[])
     const VechileModal=()=>{
         return(
             <Modal
@@ -78,8 +104,13 @@ title={'Search'}
 />
 </KeyboardAvoidingView>
             </View>
-            <View style={styles.body}>
-            <VerticalList
+            {
+            loading &&    <View style={styles.body}>
+                    <ActivityIndicator size={'small'} color={Colors.deepBlue} style={{alignSelf:'center'}} />
+                    </View>
+            }
+           { !loading &&<View style={styles.body}>
+          {vechiles.length >0 ?  <VerticalList
             numColumns={1}
                     Data={vechiles}
                     renderItem={({item})=>{
@@ -89,9 +120,8 @@ title={'Search'}
 <VechileCard
 contactNo={item.contactNo}
 demand={item.demand}
-image={item.image}
+image={item.imageUrl}
 name={item.name}
-negotiablePrice={item.negotiablePrice}
 ownerName={item.ownerName}
 companyName={item.companyName}
 modalYear={item.modalYear}
@@ -106,10 +136,13 @@ setShowModal(!showModal)
                                 </View>
                         )
                     }}
-                    keyExtractor={(item)=>{return item.id.toString()}}
+                    keyExtractor={(item,index)=>{return index.toString()}}
                     
                     />
-            </View>
+                :
+                <Text style={[styles.viewAllLabel,{alignSelf:'center'}]}>No Ads For You Right No</Text>
+                }
+            </View>}
             
         </View>
     )

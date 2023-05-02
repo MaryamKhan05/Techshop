@@ -11,7 +11,7 @@ import { collection, getDocs, query, where } from "firebase/firestore";
 import { auth, db } from "../../../../firebase.config";
 
 
-const AssignedWork=()=>{
+const AssignedWork=({navigation})=>{
 
     const [work,setWork]=useState([])
     const [loading,setLoading]=useState(false)
@@ -50,7 +50,7 @@ const AssignedWork=()=>{
     
                         <TechnicianCard
             
-                onPress={()=>{alert('You Are Starting')}}
+                onPress={()=>{navigation.navigate('TechnicianMap')}}
                 showButton
                 customerAdress={item.customerAddress}
                 customerName={item.customerName}

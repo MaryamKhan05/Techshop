@@ -17,6 +17,12 @@
         {
           "photosPermission": "TechShop Needs To Access Your Media"
         }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow TechShop to use your location."
+        }
       ]
     ],
     "assetBundlePatterns": [
@@ -29,7 +35,13 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/logo.png",
         "backgroundColor": "#ffffff"
+      },
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyB3cpEKAoA8PkgdwfSPW8_i2tlrU3WJkcw"
+        }
       }
+     
     },
     "web": {
       "favicon": "./assets/logo.png"

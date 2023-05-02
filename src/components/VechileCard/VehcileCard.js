@@ -10,7 +10,7 @@ const VechileCard=({
  
     name,
     demand,
-    negotiablePrice,
+
     used,
     ownerName,
     contactNo,
@@ -53,10 +53,7 @@ const VechileCard=({
         <Text style={{color: Colors.deepBlue, fontSize: 14,fontWeight:'bold',paddingHorizontal:wp('2%')}}>Demand Price:    
         </Text>
                     </View>     
-                <View style={{paddingVertical: hp('1%')}}>
-        <Text style={{color: Colors.deepBlue, fontSize: 14,fontWeight:'bold',paddingHorizontal:wp('2%')}}>Negotiable Price :    
-        </Text>
-                    </View>     
+                  
                 <View style={{paddingVertical: hp('1%')}}>
         <Text style={{color: Colors.deepBlue, fontSize: 14,fontWeight:'bold',paddingHorizontal:wp('2%')}}>Used :    
         </Text>
@@ -90,10 +87,7 @@ const VechileCard=({
             <Text style={{color: Colors.black, fontSize: 14,fontWeight:'bold'}}>{demand}</Text>
             
             </View>
-            <View style={{paddingVertical: hp('1%')}}>
-            <Text style={{color: Colors.black, fontSize: 14,fontWeight:'bold'}}>{negotiablePrice}</Text>
-           
-            </View>
+          
             <View style={{paddingVertical: hp('1%')}}>
             <Text style={{color: Colors.black, fontSize: 14,fontWeight:'bold'}}>{used}</Text>
             

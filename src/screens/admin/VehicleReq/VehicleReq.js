@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View, Text, FlatList, Image, StyleSheet } from "react-native";
+import React, { useState,useEffect } from "react";
+import { View, Text, FlatList, Image, StyleSheet,ToastAndroid, ActivityIndicator } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -8,6 +8,8 @@ import Button from "../../../components/Button/Button";
 import Card from "../../../components/Card/Card";
 import { Spacer } from "../../../components/Spacer/Spacer";
 import Colors from "../../../config/colors/Colors";
+import { collection,getDocs,where,query,updateDoc,getDoc,doc } from "firebase/firestore";
+import { db } from "../../../../firebase.config";
 const VehicleReq = () => {
   const [requests, setRequests] = useState([
     {
@@ -41,7 +43,50 @@ const VehicleReq = () => {
         "https://img.freepik.com/free-photo/yellow-sport-car-with-black-autotuning-road_114579-5051.jpg?size=626&ext=jpg&uid=R94214209&ga=GA1.1.1081558094.1677063520&semt=ais",
     },
   ]);
-  const renderItem = ({ item }) => (
+  const[vechileRequests,setVehicleRequests]=useState([])
+  const[loading,setLoading]=useState(true)
+  const[showLoader,setShowLoader]=useState(false)
+  const[loaderIndex,setLoaderIndex]=useState(null)
+  useEffect(()=>{
+    const getUserVechileAds=async()=>{
+
+
+const dbref = collection(db, 'VehicleRequests');
+try {
+const q = query(dbref, where('status','==','pending'));
+const querySnapshot = await getDocs(q);
+const requestsData = querySnapshot.docs.map((doc) => doc.data());
+setVehicleRequests(requestsData)
+} catch (error) {
+console.log(error);
+}
+
+setTimeout(() => {
+setLoading(false)
+}, 1500);
+    }
+    getUserVechileAds()
+},[])
+
+const updateReq =async (reqID,status,index) => {
+  setLoaderIndex(index)
+  setShowLoader(true)
+  const dbRef = collection(db, "VehicleRequests");
+  const q = query(dbRef, where("requestID", "==", reqID));
+  const foundDocs= await getDocs(q)
+  const docIds= foundDocs.docs.map((docs)=>docs.id)
+const docId=docIds[0]
+const updateDocRef=doc(db,"VehicleRequests",docId)
+  updateDoc(updateDocRef, {
+    status,
+  }).then(()=>{
+    ToastAndroid.show(`Requested ${status} Successfully!`,ToastAndroid.SHORT)
+    setLoaderIndex(null)
+    setShowLoader(false)
+  }).catch((err)=>{alert('Something Went Wrong')})
+};
+
+  const renderItem = ({ item,index }) => (
     <View
       style={{
         margin: hp("1"),
@@ -62,7 +107,7 @@ const VehicleReq = () => {
             }}
           >
             <Image
-              source={{ uri: item.image }}
+              source={{ uri: item.imageUrl }}
               style={{
                 height: hp("15"),
                 width: wp("30"),
@@ -76,18 +121,19 @@ const VehicleReq = () => {
               width: wp("70"),
             }}
           >
-            <Text
-              style={{
-                fontSize: hp("2.3"),
-                fontWeight: "700",
-              }}
-            >
-              {item.vehicle}
-            </Text>
-            <Text style={styles.text}>Model: {item.model}</Text>
-            <Text style={styles.text}>Year: {item.year}</Text>
-            <Text style={styles.text}>Price: {item.price}</Text>
-            <Text style={styles.text}>{item.description}</Text>
+          {loaderIndex==index && showLoader && <ActivityIndicator
+           
+           size={'small'}
+           color={Colors.deepBlue}
+           style={{alignSelf:'center'}}
+           />}
+            <Text style={styles.text}>Model: {item.vechileName}</Text>
+            <Text style={styles.text}>Company Name: {item.companyName}</Text>
+            <Text style={styles.text}>Year: {item.modalYear}</Text>
+            <Text style={styles.text}>Demand: {item.demand} lacs</Text>
+            <Text style={styles.text}>Used: {item.used} km</Text>
+            <Text style={styles.text}>Owner Name: {item.ownerName}</Text>
+            <Text style={styles.text}>Owner Contact: {item.contactNo}</Text>
           </View>
         </View>
         <View
@@ -101,8 +147,14 @@ const VehicleReq = () => {
 
         }}
         >
-          <Button title='Approve' width={wp('25')} height={hp('5')} />
-          <Button title='Reject' width={wp('25')} height={hp('5')} />
+          <Button title='Approve'
+          onPress={()=>{updateReq(item.requestID,'approved',index)}}
+          
+          width={wp('25')} height={hp('5')} />
+          <Button title='Reject' width={wp('25')} height={hp('5')} 
+             onPress={()=>{updateReq(item.requestID,'cancelled')}}
+             
+          />
         </View>
       </Card>
     </View>
@@ -115,18 +167,26 @@ const VehicleReq = () => {
         flex: 1,
       }}
     >
-      <View
+   {!loading &&    <View
         style={{
           padding: hp("1"),
         }}
       >
-        <FlatList
-          data={requests}
+       {vechileRequests.length >0 ? <FlatList
+          data={vechileRequests}
           showsVerticalScrollIndicator={false}
           renderItem={renderItem}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item,index) => {return index.toString()}}
         />
-      </View>
+        :
+<Text>No Requests Right Now</Text>
+        }
+      </View>}
+      {
+        loading && <View style={{flex:1,justifyContent:'center',alignSelf:'center'}}>
+          <Text>Loading...</Text>
+          </View>
+      }
     </View>
   );
 };

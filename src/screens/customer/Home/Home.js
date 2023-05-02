@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Image,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import {
   heightPercentageToDP as hp,
@@ -31,6 +32,28 @@ const Home = ({ navigation }) => {
   const [search, setSearch] = useState("");
   const[data,setData]=useState([])
   const[filterServiceData,setFilterServiceData]=useState([])
+  const[loading,setLoading]=useState(true)
+  useEffect(() => {
+   
+
+    const getServices = async () => {
+      // const d = [];
+    
+      const dbRef = collection(db, 'Services');
+      const querySnapshot = await getDocs(dbRef);
+    const d=  querySnapshot.docs.map((doc)=>doc.data())
+ 
+    
+      setData(d);
+      setFilterServiceData(d)
+      setTimeout(() => {
+        
+        setLoading(false)
+      }, 1500);
+    };
+
+    getServices();
+  }, []);
   const searchService = (text) => {
     if(!text){
 setFilterServiceData(data)
@@ -38,9 +61,9 @@ setSearch(text)
     }
     else {
     
-      const filtering= filterServiceData.filter((item)=>{
+      const filtering= data.filter((item)=>{
         const name= item.serviceName.toLocaleLowerCase()
-        if(name.includes(text)){
+        if(name.includes(text.toLocaleLowerCase())){
           return item.name
         }
       })
@@ -50,25 +73,7 @@ setSearch(text)
   
    
   };
-  useEffect(() => {
-   
 
-    const getServices = async () => {
-      const d = [];
-    
-      const dbRef = collection(db, 'Services');
-      const querySnapshot = await getDocs(dbRef);
-    
-      querySnapshot.forEach((doc) => {
-        d.push(doc.data());
-      });
-    
-      setData(d);
-      setFilterServiceData(d)
-    };
-
-    getServices();
-  }, []);
   return (
         <KeyboardAvoidingView style={{flex:1}} behavior="height">
     <View style={[CommonStyles.container, { justifyContent: "space-between" }]}>
@@ -77,10 +82,7 @@ setSearch(text)
             borderColor={Colors.white}
             textColor={Colors.white}
             value={search}
-            onChangeText={(text) => {
-              
-              searchService(text.toLocaleLowerCase());
-            }}
+            onChangeText={(text) => {searchService(text)  }}
             placeholder="Search Any Service..."
             title={"Search"}
           />
@@ -88,7 +90,10 @@ setSearch(text)
       </View>
 
       <View style={styles.body}>
-      <ScrollView>
+        {
+          loading && <ActivityIndicator size={'small'} style={{alignSelf:'center'}} color={Colors.deepBlue}/>
+        }
+   {!loading &&   <ScrollView>
         <View style={styles.containerView}>
           <View style={styles.rowHolder}>
             <Text style={styles.categoryLabel}>Services</Text>
@@ -172,7 +177,7 @@ setSearch(text)
             }}
           />
         </View>
-      </ScrollView>
+      </ScrollView>}
       </View>
     </View>
       </KeyboardAvoidingView>
