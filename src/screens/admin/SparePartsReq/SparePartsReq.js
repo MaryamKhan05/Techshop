@@ -53,28 +53,47 @@ import Card from "../../../components/Card/Card";
 // };
 
 const SparePartsReq = ({ navigation }) => {
+  const [partService, setPartService] = useState([]);
   const [parts, setParts] = useState([]);
+
+  // useEffect(() => {
+  //   const getParts = async () => {
+  //     const existingParts = await AsyncStorage.getItem("spareparts");
+
+  //     console.log("existing parts are ", existingParts);
+  //     if (existingParts) {
+  //       const spareparts = JSON.parse(existingParts).filter(
+  //         (part) => part !== null
+  //       );
+  //       setParts(spareparts);
+  //     }
+  //   };
+  //   getParts();
+  // }, []);
 
   useEffect(() => {
     const getParts = async () => {
-      const existingParts = await AsyncStorage.getItem("spareparts");
+      const d = [];
+      const dbRef = collection(db, "SpareParts");
+      const querySnapshot = await getDocs(dbRef);
 
-      console.log("existing parts are ", existingParts);
-      if (existingParts) {
-        const spareparts = JSON.parse(existingParts).filter(
-          (part) => part !== null
-        );
-        setParts(spareparts);
-      }
+      querySnapshot.forEach((doc) => {
+        d.push(doc.parts());
+      });
+
+      setParts(d);
     };
+
     getParts();
   }, []);
 
   // FUNCTION TO ADD NEW SPARE PARTS
-  const handleAddParts = (newParts) => {
-    console.log("parts received on spare screen", newParts);
-    setParts([...parts, newParts]);
-  };
+  // const handleAddParts = (newParts) => {
+  //   console.log("parts received on spare screen", newParts);
+  //   setParts([...parts, newParts]);
+  // };
+
+
 
   //FUNCTION TO DELETE THE EXISTING SPARE PARTS
   const handleDelete = async (item) => {
@@ -210,7 +229,8 @@ const SparePartsReq = ({ navigation }) => {
       </View>
       <Button
         title="Add Parts"
-        onPress={() => navigation.navigate("AddParts", { handleAddParts })}
+        // onPress={() => navigation.navigate("AddParts", { handleAddParts })}
+        onPress={() => navigation.navigate("AddParts")}
       />
     </View>
   );

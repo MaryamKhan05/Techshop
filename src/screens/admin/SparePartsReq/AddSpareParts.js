@@ -1,77 +1,3 @@
-// import { useState } from "react";
-// import { View, Text, TextInput, Button, Image } from "react-native";
-// import { SafeAreaView } from "react-native-safe-area-context";
-// import AsyncStorage from "@react-native-async-storage/async-storage";
-
-// const AddService = ({ navigation, route }) => {
-//   const [requestDate, setRequestDate] = useState("");
-//   const [serviceName, setServiceName] = useState("");
-//   const [customerName, setCustomerName] = useState("");
-//   const [customerAddress, setCustomerAddress] = useState("");
-//   const [time, setTime] = useState("");
-//   const [description, setDescription] = useState("");
-//   const [image, setImage] = useState("");
-
-//   const handleSave = async () => {
-//     const newService = {
-//       id: Math.random(),
-//       requestDate,
-//       serviceName,
-//       customerName,
-//       customerAddress,
-//       time,
-//       description,
-//       image,
-//     };
-
-//     const existingServices = await AsyncStorage.getItem("services");
-//     let services = [];
-
-//     if (existingServices) {
-//       services = JSON.parse(existingServices);
-//     }
-
-//     services.push(newService);
-
-//     await AsyncStorage.setItem("services", JSON.stringify(services));
-//     setRequestDate("");
-//     setServiceName("");
-//     setCustomerName("");
-//     setCustomerAddress("");
-//     setTime("");
-//     setDescription("");
-//     setImage("");
-//     const handleAddService = route.params.handleAddService;
-//     handleAddService(newService);
-//     navigation.navigate("Services");
-//   };
-//   return (
-//     <SafeAreaView>
-//       <Image
-//         source={{
-//           uri: "https://cdn-icons-png.flaticon.com/512/2872/2872152.png",
-//         }}
-//         style={{ width: 100, height: 100, marginBottom: 10 }}
-//       />
-//       <Text>Request Date:</Text>
-//       <TextInput value={requestDate} onChangeText={setRequestDate} />
-//       <Text>Service Name:</Text>
-//       <TextInput value={serviceName} onChangeText={setServiceName} />
-//       <Text>Customer Name:</Text>
-//       <TextInput value={customerName} onChangeText={setCustomerName} />
-//       <Text>Customer Address:</Text>
-//       <TextInput value={customerAddress} onChangeText={setCustomerAddress} />
-//       <Text>Time:</Text>
-//       <TextInput value={time} onChangeText={setTime} />
-//       <Text>Description:</Text>
-//       <TextInput value={description} onChangeText={setDescription} />
-//       <Button title="Save" onPress={handleSave} />
-//     </SafeAreaView>
-//   );
-// };
-
-// export default AddService;
-
 import React, { useState } from "react";
 import {
   Text,
@@ -89,8 +15,17 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import { addDoc, collection } from "firebase/firestore";
+import { db, storage } from "../../../../firebase.config";
+import {
+  getDownloadURL,
+  ref,
+  uploadBytes,
+  getStorage,
+  uploadBytesResumable,
+} from "firebase/storage";
 
-import ImagePicker from "react-native-image-picker";
+import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Button from "../../../components/Button/Button";
 import Colors from "../../../config/colors/Colors";
@@ -110,44 +45,112 @@ const AddParts = ({ navigation, route }) => {
   const [description, setDescription] = useState("");
   const [imageData, setImageData] = useState(null);
 
-  const handleSave = async () => {
-    const newParts = {
-      id: Math.random(),
-      requestDate,
-      serviceName,
-      customerName,
-      customerAddress,
-      time,
-      description,
-      imageData,
-      company,
-      price,
+
+
+
+  const validate=()=>{
+    if(serviceName==""){
+      return alert("Spare Part Name is Required")
+    }
+  }
+  const imageUpload = async () => {
+    const blobImage = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function () {
+        reject(new TypeError("Network request failed"));
+      };
+      xhr.responseType = "blob";
+      xhr.open("GET", pickedImage, true);
+      xhr.send(null);
+      const metadata = {
+        contentType: "image/jpeg",
+      };
+    });
+    // Create the file metadata
+    /** @type {any} */
+    const metadata = {
+      contentType: "image/jpeg",
     };
 
-    const existingParts = await AsyncStorage.getItem("spareparts");
-    let spareparts = [];
+    // Upload file and metadata to the object 'images/mountains.jpg'
+    const storageRef = ref(storage, "SpareParts/" + Date.now());
+    const uploadTask = uploadBytesResumable(storageRef, blobImage, metadata);
 
-    if (existingParts) {
-      spareparts = JSON.parse(existingParts);
-    }
+    // Listen for state changes, errors, and completion of the upload.
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log("Upload is " + progress + "% done");
+        switch (snapshot.state) {
+          case "paused":
+            console.log("Upload is paused");
+            break;
+          case "running":
+            console.log("Upload is running");
+            break;
+          case "success":
+            console.log("Your Image Uploaded Successfully");
+        }
+      },
+      (error) => {
+        switch (error.code) {
+          case "storage/unauthorized":
+            // User doesn't have permission to access the object
+            break;
+          case "storage/canceled":
+            // User canceled the upload
+            break;
 
-    spareparts.push(newParts);
+          // ...
 
-    await AsyncStorage.setItem("spareparts", JSON.stringify(spareparts));
-    setRequestDate("");
-    setServiceName("");
-    setCustomerName("");
-    setCustomerAddress("");
-    setTime("");
-    setDescription("");
-    setCompany("");
-    setPrice("");
-    setImageData(null);
-    const handleAddParts = route.params.handleAddParts;
-    handleAddParts(newParts);
-    // console.log('newparts are', newParts)
-    navigation.goBack();
+          case "storage/unknown":
+            // Unknown error occurred, inspect error.serverResponse
+            break;
+        }
+      },
+      () => {
+        // Upload completed successfully, now we can get the download URL
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          console.log("File available at", downloadURL);
+          handleSave(downloadURL);
+        });
+      }
+    );
   };
+
+
+  const clearFields = () => {
+    // setPickedImage("");
+    // setServiceCharges("");
+    setServiceName("");
+    setDescription("");
+  };
+
+
+  const handleSave = async (imageUrl)=>{
+
+    const dbref= collection(db,"SpareParts") 
+    addDoc(dbref, {
+      date: new Date().toDateString(),
+      serviceName,
+      // serviceCharges,
+      serviceDescription: description,
+      // image: imageUrl,
+    })
+    .then(() => {
+      ToastAndroid.show("Spare Part Added ", ToastAndroid.SHORT);
+      clearFields();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
 
   const handleSelectImage = () => {
     const options = {
@@ -167,6 +170,22 @@ const AddParts = ({ navigation, route }) => {
         setImageData(response);
       }
     });
+  };
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (result.canceled) {
+      setPickedImage("");
+    } else {
+      setPickedImage(result.assets[0].uri);
+    }
   };
   return (
     <SafeAreaView style={[CommonStyles.container, {  }]}>
