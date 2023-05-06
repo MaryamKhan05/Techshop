@@ -45,7 +45,6 @@ const CustomerDrawer=()=>{
                 onPress={()=>{
                   
                   setItemColor(true)
-                  console.log("Pressed")
                   signOut(auth).then(()=>{console.log('Logged out')}).catch((err)=>{console.log(err)})}}
                 >
                   <AntDesign name="logout" size={24} color={Colors.deepBlue}/>

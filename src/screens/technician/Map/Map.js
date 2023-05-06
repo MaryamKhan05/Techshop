@@ -94,7 +94,7 @@ const TechnicianMap = ({route}) => {
 
     };
     getLocationPermissions();
-  }, []);
+  }, [location]);
  const handleStartJourney=()=>{
   // alert(`Starting ${serviceType} service`)
   const dbRef= collection(db,'Notifications')
@@ -105,12 +105,17 @@ customerId:item.customerId,
 customerName: item.customerName,
 serviceId: item.serviceId,
 serviceName:item.serviceName,
+techName: item.requestedTech,
 techContact: item.requestedTechContact,
+
 requestedTechId: item.requestedTechId,
+customerContact:item.customerContact,
 status: 'sent',
 readByTechnician:'',
+readByAdmin:'',
 readByCustomer:'',
 date: item.date,
+serviceType,
 message: "TechShop Professional Is On The Way Please Be In Contact"
   }).then(()=>{
 const docRef= doc(db,'QuickServices',docId)
@@ -129,21 +134,26 @@ updateDoc(docRef,{
       customerName: item.customerName,
       serviceId: item.serviceId,
       techContact: item.techContact,
+      techName:item.assignedTo,
       requestedTechId: item.techId,
       serviceName:item.serviceName,
+      customerContact:item.customerContact,
       readByTechnician:'',
 readByCustomer:'',
+readByAdmin:'',
+serviceType,
       status: 'sent',
       time: item.time,
-      date: item.date,
+      date: item.requiredDate,
       message: "TechShop Professional Is On The Way Please Be In Contact"
         }).then(()=>{
-          const docRef= (db,'ServiceRequests',docId)
+          const docRef= doc(db,'ServiceRequests',docId)
 updateDoc(docRef,{
   status: 'started'
 })
 ToastAndroid.show(`Notified ${item.customerName} For Serive Please Be In Contact! `,ToastAndroid.SHORT)
         }).catch((err)=>{
+          console.log(err)
         return  alert('Something Went Wrong')
         })
   }
@@ -162,7 +172,12 @@ ToastAndroid.show(`Notified ${item.customerName} For Serive Please Be In Contact
 
   return (
     <View style={[CommonStyles.container, { justifyContent: 'center' }]}>
-     {!location && <ActivityIndicator style={{alignSelf:'center'}} color={Colors.deepBlue} size='small' />}
+     {!location && 
+     <View>
+      <Text style={{alignSelf:'center',color:Colors.deepBlue,fontSize:16,margin:hp('1%')}}>Please Wait We Are Setting Things For You</Text>
+       <ActivityIndicator style={{alignSelf:'center'}} color={Colors.deepBlue} size='small' />
+      </View>
+       }
       {/* {location && <Text>Location Is: {JSON.stringify(location)}</Text>} */}
       {
     location &&

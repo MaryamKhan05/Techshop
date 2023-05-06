@@ -12,10 +12,11 @@ import { addDoc, collection } from 'firebase/firestore'
 import { auth, db } from '../../../../firebase.config'
 import { ToastAndroid } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { ActivityIndicator } from 'react-native'
+import { DatePickerIOS } from 'react-native'
 
 const RequestService=({navigation,route})=>{
     const {name,charges,reuqestCategory}= route.params
-   
     const[serviceName,setServiceName]=useState(name)
     const[serviceCharges,setServiceCharges]=useState(charges)
     const[customerName,setCustomerName]=useState('Hammad')
@@ -23,9 +24,11 @@ const RequestService=({navigation,route})=>{
     const[customerContactNo,setCustomerContactNo]=useState('Hammad')
     const[customerAddress,setCustomerAddress]=useState('Farooq Coorperation Murree Road Shamsabad  Rawalpindi')
     const[date,setDate]=useState(new Date().toDateString())
+    const[servicedate,setServiceDate]=useState('')
     const[time,setTime]=useState('')
     const[desc,setDesc]=useState('')
     const[selectedIndex,setSelectedIndex]=useState('')
+    const[loading,setLoading]=useState(false)
     useEffect(()=>{
       AsyncStorage.getItem('UserName').then((val)=>{
       
@@ -45,7 +48,14 @@ const RequestService=({navigation,route})=>{
     }
 
     const PostRequest=async()=>{
-if(!time){return(alert('Service Time Is Required '))}
+      setLoading(true)
+if(!time){
+  setLoading(false)
+  return(alert('Service Time Is Required '))}
+  else if(!servicedate){
+    setLoading(false)
+  return(alert('Service Date Is Required '))}  
+  
 else{
   const dbref= collection(db,'ServiceRequests')
 const serviceId=auth.currentUser.uid + new Date().toTimeString()+ customerName+ time 
@@ -56,6 +66,7 @@ const serviceId=auth.currentUser.uid + new Date().toTimeString()+ customerName+ 
     serviceName,
     customerAddress,
     customerName,
+    requiredDate: servicedate,
     customerContact: customerContactNo,
     desc: desc?desc:'',
     status:'pending',
@@ -65,12 +76,15 @@ const serviceId=auth.currentUser.uid + new Date().toTimeString()+ customerName+ 
     reuqestCategory,
     serviceId
   }).then(()=>{
+    setLoading(false)
     ToastAndroid.show('Service Request Posted',ToastAndroid.SHORT)
     clearForm()
   }).catch((err)=>{
+    setLoading(false)
     console.log(err)})
   
 }
+setLoading(false)
     }
     return(
         <View style={{flex:1,justifyContent:'space-between',backgroundColor:Colors.white,paddingBottom:hp('2%')}}>
@@ -79,12 +93,18 @@ const serviceId=auth.currentUser.uid + new Date().toTimeString()+ customerName+ 
             <Text style={styles.title}>Service Request</Text>
             </View>
      <View >
+{loading && <ActivityIndicator
+color={Colors.deepBlue}
+size={'small'}
+style={{alignSelf:'center'}}
 
+/>}
      <ScrollView style={{ height: hp('75%')}} contentContainerStyle={{paddingBottom: hp('10%')}}>
       <KeyboardAvoidingView style={{flex:1}} behavior='position'>
   <View style={styles.inputView}>
     <Input value={date} title="Request Date" disabled />
   </View>
+ 
   <View style={styles.inputView}>
     <Input value={serviceName} title="Service Name" disabled />
   </View>
@@ -103,6 +123,12 @@ const serviceId=auth.currentUser.uid + new Date().toTimeString()+ customerName+ 
       }}
     />
   </View>
+  <View style={styles.inputView}>
+   
+   <Input value={servicedate} 
+   placeholder={'Enter A Desired Date For Service i.e 20-10-2023'}
+   title="Service Required On Date" onChangeText={(text)=>{setServiceDate(text)}} />
+ </View>
   <View style={styles.inputView}>
   <Input
       value={time}

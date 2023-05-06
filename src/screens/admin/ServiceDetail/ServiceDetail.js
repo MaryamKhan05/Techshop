@@ -42,7 +42,6 @@ const[serviceId,setServiceId]=useState('')
 
       const querySnapshot = await getDocs(dbref);
       const TechniciansData = querySnapshot.docs.map((doc) => doc.data());
-
       setTechsData(TechniciansData);
       
     };
@@ -52,10 +51,11 @@ const[serviceId,setServiceId]=useState('')
   useEffect(() => {
     const fetchRequests = async () => {
       setLoading(true);
+   
       const dbref = collection(db, "ServiceRequests");
       const q = query(
         dbref,
-        where("requestCategory", "==", reuqestCategory),
+        where("reuqestCategory", "==", reuqestCategory),
         where("status", "==", "pending")
       );
 
@@ -122,7 +122,16 @@ const[serviceId,setServiceId]=useState('')
                 textTransform: "capitalize",
               }}
             >
-              Request Date: {item.date}
+             Service Requested Date: {item.date}
+            </Text>
+            <Text
+              style={{
+                fontSize: 14,
+                fontWeight: "800",
+                textTransform: "capitalize",
+              }}
+            >
+             Service Required Date: {item.requiredDate}
             </Text>
             <Text
               style={{
@@ -298,7 +307,7 @@ const updateDocRef=doc(db,"ServiceRequests",docId)
         {loading && <Text>Loading...</Text>}
         {!loading && (
           <View>
-            {data && (
+            {data.length>0 && (
               <HorizontalList
                 Data={data}
                 renderItem={renderItem}
@@ -307,7 +316,7 @@ const updateDocRef=doc(db,"ServiceRequests",docId)
                 }}
               />
             )}
-            {!data && <Text>No Requests Yet</Text>}
+            {data.length==0 && <Text>No Requests Yet</Text>}
           </View>
         )}
       </View>

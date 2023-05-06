@@ -29,6 +29,7 @@ const RequestQuickService=({navigation,route})=>{
     const[technicianContact,setTechnicianContact]=useState('')
     const[allTechnicians,setAllTechnicians]=useState([])
     const[loading,setLoading]=useState(true)
+    const[postloading,setPostLoading]=useState(true)
     useEffect(()=>{
 AsyncStorage.getItem('UserName').then((val)=>{
 
@@ -59,8 +60,13 @@ useEffect(()=>{
   getTechnicians()
 },[])
     const PostRequest=async()=>{
-if(!technicianName){return(alert('Technician Name Is Required For Quick Service'))}
-else if(!customerAddress){return(alert('CustomerAddress Is Required For Quick Service'))}
+      setPostLoading(true)
+if(!technicianName){
+  setPostLoading(false)
+  return(alert('Technician Name Is Required For Quick Service'))}
+else if(!customerAddress){
+  setPostLoading(false)
+  return(alert('CustomerAddress Is Required For Quick Service'))}
 else{
   const dbref= collection(db,'QuickServices')
 const serviceId=auth.currentUser.uid + new Date().toTimeString()+ customerName+ technicianName 
@@ -79,17 +85,30 @@ const serviceId=auth.currentUser.uid + new Date().toTimeString()+ customerName+ 
     reuqestCategory:'quick service',
     serviceId
   }).then(()=>{
+    setPostLoading(false)
     ToastAndroid.show('Quick Service Request Posted',ToastAndroid.SHORT)
     clearForm()
   }).catch((err)=>{
+    setPostLoading(false)
     console.log(err)})
-  
+    setPostLoading(false)
 }
     }
     return(
       <View style={{flex:1,justifyContent:'center'}}>
 
         { !loading && <View style={{flex:1,justifyContent:'space-between',backgroundColor:Colors.white,paddingBottom:hp('2%')}}>
+            
+        {
+          postloading && <View>
+          <ActivityIndicator
+          color={Colors.deepBlue}
+          size={'small'}
+          style={{alignSelf:'center'}}
+          
+          />
+            </View>
+         }
              <View style={{height: hp('7%'),justifyContent:'center'}}>
  
              <Text style={styles.title}>Quick Service Request</Text>
@@ -119,7 +138,7 @@ const serviceId=auth.currentUser.uid + new Date().toTimeString()+ customerName+ 
          onPress={()=>{
            setSelectedIndex(index)
            setTechnicianName(item.name.toString())
-           setTechnicianContact(item.phoneNo)
+           setTechnicianContact(item.PhoneNo)
           setTechnicianId(item.uid)
           }}
          style={[styles.timeslotsContainer,{backgroundColor: index== selectedIndex? Colors.red:Colors.deepBlue}]}>

@@ -140,7 +140,7 @@ const searchService=(text)=>{
                       navigation.navigate("RequestService", {
                         name: item.serviceName,
                         charges: item.serviceCharges,
-                        reuqestCategory: item.reuqestCategory
+                        reuqestCategory: item.serviceName
 
                       });
                     }}
@@ -148,7 +148,7 @@ const searchService=(text)=>{
                       navigation.navigate("RequestQuickService", {
                         name: item.serviceName,
                         charges: item.serviceCharges,
-                        reuqestCategory: item.reuqestCategory
+                        reuqestCategory: item.serviceName
 
                       });
                     }}
@@ -156,8 +156,8 @@ const searchService=(text)=>{
                 </View>
               );
             }}
-            keyExtractor={(item) => {
-              return item.image;
+            keyExtractor={(item,index) => {
+              return index.toString();
             }}
           />
           :

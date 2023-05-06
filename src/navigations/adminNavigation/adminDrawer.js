@@ -10,6 +10,7 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
+  widthPercentageToDP,
 } from "react-native-responsive-screen";
 import Home from "../../screens/admin/Home/Home";
 
@@ -20,6 +21,7 @@ import SparePartsReq from "../../screens/admin/SparePartsReq/SparePartsReq";
 import AddService from "../../screens/admin/Services/AddServices";
 import Colors from "../../config/colors/Colors";
 import { auth } from "../../../firebase.config";
+
 const Drawer = createDrawerNavigator();
 const size = hp("2.5");
 const color = Colors.deepBlue;
@@ -55,7 +57,17 @@ const AdminDrawer = ({ navigation }) => {
             />
           ),
           headerRight: () => (
-            <TouchableOpacity
+          [
+            <View style={{flexDirection:'row',width:widthPercentageToDP('25%'),justifyContent:'space-evenly'}}>
+
+          <TouchableOpacity
+          onPress={()=>{navigation.navigate('AdminNotifications')}}
+          >
+  <Entypo name="bell" size={35} color={Colors.deepBlue} />
+              
+          </TouchableOpacity>
+       
+          <TouchableOpacity
               style={{ marginRight: 10 }}
               onPress={() => {
                 Alert.alert(
@@ -78,6 +90,8 @@ const AdminDrawer = ({ navigation }) => {
             >
               <Ionicons name="log-out-outline" size={30} color={Colors.deepBlue} />
             </TouchableOpacity>
+</View>
+       ]
           ),
           //   headerTitle: () => (
           //     <Image

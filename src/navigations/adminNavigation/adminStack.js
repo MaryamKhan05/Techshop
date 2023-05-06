@@ -19,6 +19,8 @@ import LoginScreen from "../../screens/auth/admin/AdminLogin";
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from '../../../firebase.config'
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import AdminNotifications from "../../screens/admin/Notifications/AdminNotifications";
+import ServiceDetailsNotified from "../../screens/admin/NotifiedServiceDetails/ServiceDetailsNotified";
 const Stack = createStackNavigator();
 
 const AdminStack = () => {
@@ -114,6 +116,16 @@ checkUser()
           name="EditSpareParts"
           component={EditSpareParts}
           options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="AdminNotifications"
+          component={AdminNotifications}
+          options={{ headerShown: true,headerTitle:'Notifications' }}
+        />
+        <Stack.Screen
+          name="ServiceDetailsNotified"
+          component={ServiceDetailsNotified}
+          options={{ headerShown: true,headerTitle:'Service Details' }}
         />
         </Stack.Group>:
          <Stack.Group>

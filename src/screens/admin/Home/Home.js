@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect,useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Button from "../../../components/Button/Button";
@@ -10,16 +10,49 @@ import {
 import Colors from "../../../config/colors/Colors";
 import HorizontalList from "../../../components/HorizontalList/HorizontalList";
 import AddService from "../Services/AddServices";
-import { AdminServices } from "../Services/DummyData";
+// import { AdminServices } from "../Services/DummyData";
 import ServiceCard from "../../../components/ServiceCard/ServiceCard";
 import AdminServiceCard from "../../../components/AdminCard/AdminServiceCard";
 import { SparepartStock } from "../SparePartsReq/DummyData";
 import AdminSparePartCard from "../../../components/AdminCard/AdminSparePartCard";
 import { Spacer } from "../../../components/Spacer/Spacer";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../../../firebase.config";
+import { ActivityIndicator } from "react-native";
 
 const Home = ({ navigation }) => {
+  const[loading,setLoading]=useState(true)
+  const [AdminServices,setAdminServices]=useState([])
+  const [AdminSpareParts,setAdminSpareParts]=useState([])
+  useEffect(()=>{
+    const getServices=async()=>{
+      const dbRef= collection(db,'Services')
+      const snapshot= await getDocs(dbRef)
+const data= snapshot.docs.map((item)=>item.data())
+setAdminServices(data)
+setLoading(false)
+
+    }
+    getServices()
+  },[])
+//   const getSpareParts=async()=>{
+//     const dbRef= collection(db,'SpareParts')
+//     const snapshot= await getDocs(dbRef)
+// const data= snapshot.docs.map((item)=>item.data())
+// setAdminSpareParts(data)
+//     setLoading(false)
+//   }
   return (
-    <View
+    <View style={{flex:1,justifyContent:'center'}}>
+
+   {loading ?
+   <ActivityIndicator
+   size={'small'}
+style={{alignSelf:'center'}}
+color={Colors.deepBlue}   
+   />
+   :
+   <View
       style={{
         backgroundColor: Colors.white,
         paddingVertical: hp("2"),
@@ -62,8 +95,8 @@ const Home = ({ navigation }) => {
             </View>
           );
         }}
-        keyExtractor={(item) => {
-          return item.id.toString();
+        keyExtractor={(item,index) => {
+          return index.toString();
         }}
       />
       <Spacer />
@@ -115,6 +148,7 @@ const Home = ({ navigation }) => {
           return item.id.toString();
         }}
       />
+    </View>}
     </View>
   );
 };

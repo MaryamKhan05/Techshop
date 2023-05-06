@@ -87,7 +87,7 @@ docId
                     customerAdress={item.customerAddress}
                     customerName={item.customerName}
                     time={item.time}
-                    requestDate={item.date}
+                    requestDate={item.requiredDate}
                     serviceName={item.serviceName}
                     customerContact={'03123456789'}
                     />
