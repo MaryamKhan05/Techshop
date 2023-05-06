@@ -17,6 +17,9 @@ import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from '../../../firebase.config'
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import TechnicianMap from '../../screens/technician/Map/Map'
+import TechNotifications from '../../screens/technician/Notifications/Notifications'
+import { widthPercentageToDP } from 'react-native-responsive-screen'
+import ServiceDetails from '../../screens/technician/ServiceDetails/ServiceDetails'
 const stack= createNativeStackNavigator()
 const TechnicianNavigation=()=>{
     const navigation=useNavigation()
@@ -58,12 +61,24 @@ checkUser()
                 headerTitle:'TechShop', 
                 headerTitleAlign:'center',
                 headerRight: () => (
+                  [
+<View style={{flexDirection:'row',width:widthPercentageToDP('25%'),justifyContent:'space-evenly'}}>
+
+                    <TouchableOpacity
+                    onPress={()=>{navigation.navigate('TechNotifications')}}
+                    >
+            <Ionicons name="ios-notifications" size={35} color={Colors.deepBlue} />
+                        
+                    </TouchableOpacity>
                     <TouchableOpacity
                     onPress={()=>{navigation.navigate('TechnicianWallet')}}
                     >
               <Ionicons name="ios-wallet" size={35}  color={Colors.deepBlue} />
                         
                     </TouchableOpacity>
+</View>
+                    
+                  ]
                  
                   ),
                  
@@ -86,6 +101,8 @@ checkUser()
             <stack.Screen component={TechnicianProfile} name="TechnicianProfile" options={{headerShown:true,headerTitle:'TechShop', headerTitleAlign:'center'}}/>
             <stack.Screen component={TechnicianWorkHistory} name="TechnicianWorkHistory" options={{headerShown:true,headerTitle:'TechShop', headerTitleAlign:'center'}}/>
             <stack.Screen component={TechnicianMap} name="TechnicianMap" options={{headerShown:true,headerTitle:'TechShop', headerTitleAlign:'center'}}/>
+            <stack.Screen component={TechNotifications} name="TechNotifications" options={{headerShown:true,headerTitle:'TechShop', headerTitleAlign:'center'}}/>
+            <stack.Screen component={ServiceDetails} name="ServiceDetails" options={{headerShown:true,headerTitle:'TechShop', headerTitleAlign:'center'}}/>
             </stack.Group>:
             <stack.Group>
             <stack.Screen component={LoginScreen} name="LoginScreen" />

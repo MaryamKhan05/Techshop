@@ -16,9 +16,12 @@ import MainStack from "./src/appNavigation/navigation";
 import CustomerDrawer from "./src/navigations/customer/CustomerDrawer";
 import CustomerNavigations from "./src/navigations/customer/CustomerNavigations";
 import MainAppRoutes from "./src/navigations/approutes/AppMainRoutes";
+import { useEffect } from "react";
+
 
 
 export default function App() {
+ 
 
   return (
   <MainAppRoutes/>

@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 
 import {View,Text,TouchableOpacity, ScrollView, StyleSheet, KeyboardAvoidingView} from 'react-native'
 import Input from '../../../components/Input/Input'
@@ -11,6 +11,7 @@ import timeslots from './TimeSlots'
 import { addDoc, collection } from 'firebase/firestore'
 import { auth, db } from '../../../../firebase.config'
 import { ToastAndroid } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const RequestService=({navigation,route})=>{
     const {name,charges,reuqestCategory}= route.params
@@ -18,11 +19,24 @@ const RequestService=({navigation,route})=>{
     const[serviceName,setServiceName]=useState(name)
     const[serviceCharges,setServiceCharges]=useState(charges)
     const[customerName,setCustomerName]=useState('Hammad')
+    
+    const[customerContactNo,setCustomerContactNo]=useState('Hammad')
     const[customerAddress,setCustomerAddress]=useState('Farooq Coorperation Murree Road Shamsabad  Rawalpindi')
     const[date,setDate]=useState(new Date().toDateString())
     const[time,setTime]=useState('')
     const[desc,setDesc]=useState('')
     const[selectedIndex,setSelectedIndex]=useState('')
+    useEffect(()=>{
+      AsyncStorage.getItem('UserName').then((val)=>{
+      
+      setCustomerName(val)
+      }).then(()=>{
+        AsyncStorage.getItem('UserPhoneNo').then((val)=>{
+          setCustomerContactNo(val)
+      
+        })
+      })
+          },[customerContactNo,customerName])
     const clearForm=()=>{
   
       setTime('')
@@ -42,10 +56,12 @@ const serviceId=auth.currentUser.uid + new Date().toTimeString()+ customerName+ 
     serviceName,
     customerAddress,
     customerName,
+    customerContact: customerContactNo,
     desc: desc?desc:'',
     status:'pending',
     assignedTo: '',
     time,
+  
     reuqestCategory,
     serviceId
   }).then(()=>{

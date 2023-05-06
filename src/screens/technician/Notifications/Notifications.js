@@ -11,7 +11,7 @@ import Colors from "../../../config/colors/Colors";
 
 
 
-const CustomerNotifications=({navigation})=>{
+const TechNotifications=({navigation})=>{
     const[notifications,setNotifications]=useState([])
     const[loading,setLoading]=useState(true)
     const[readNotiIndex,setReadNotiIndex]=useState(null)
@@ -21,7 +21,7 @@ const CustomerNotifications=({navigation})=>{
         const getUpdates=async()=>{
             const dbRef= collection(db,'Notifications')
             
-            const q=query(dbRef,where('customerId','==',auth.currentUser.uid))
+            const q=query(dbRef,where('requestedTechId','==',auth.currentUser.uid))
             const querySnapshot= await getDocs(q)
             const data= querySnapshot.docs.map((item)=>item.data())
             const filteredData= data.filter((item)=> {return item.status != 'completed'} )
@@ -57,10 +57,10 @@ renderItem={({item,index})=>{
                     item
                 })
             }}
-            style={[styles.card,{backgroundColor: item.readByCustomer == 'read'?Colors.white:index==readNotiIndex?Colors.white:Colors.deepBlue}]}>
+            style={[styles.card,{backgroundColor: item.readByTechnician == 'read'?Colors.white:index==readNotiIndex?Colors.white:Colors.deepBlue}]}>
             
-                <Text style={[styles.notiText,{color: item.readByCustomer == 'read'?Colors.black:index==readNotiIndex?Colors.black:Colors.white}]}> You Have A {item.serviceName} Service</Text>
-                <Text style={[styles.date,{color: item.readByCustomer == 'read'?Colors.black:index==readNotiIndex?Colors.black:Colors.white}]}>{item.date} {item?.time}</Text>
+                <Text style={[styles.notiText,{color: item.readByTechnician == 'read'?Colors.black:index==readNotiIndex?Colors.black:Colors.white}]}>{item.customerName} is waiting for you for a {item.serviceName} Service</Text>
+                <Text style={[styles.date,{color: item.readByTechnician == 'read'?Colors.black:index==readNotiIndex?Colors.black:Colors.white}]}>{item.date} {item?.time}</Text>
             </TouchableOpacity>
       
     )
@@ -94,4 +94,4 @@ const styles= StyleSheet.create({
 
 
 })
-export default CustomerNotifications
+export default TechNotifications

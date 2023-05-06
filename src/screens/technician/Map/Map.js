@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, Text, ActivityIndicator, TouchableOpacity, ToastAndroid } from 'react-native';
 import CommonStyles from "../../../config/styles/styles";
 import * as Location from 'expo-location';
 import MapView, {Marker,Polyline} from 'react-native-maps'
 import Colors from "../../../config/colors/Colors";
 import { heightPercentageToDP as hp,widthPercentageToDP as wp} from "react-native-responsive-screen";
+import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
+import { db } from "../../../../firebase.config";
 
 const mapStyle = [    {      elementType: 'geometry',      stylers: [        {          color: '#242f3e',        },      ],
 },
@@ -55,13 +57,17 @@ const mapStyle = [    {      elementType: 'geometry',      stylers: [        {  
 ];
 
 
-const TechnicianMap = () => {
+const TechnicianMap = ({route}) => {
+  const {serviceType,item,docId}=route.params;
+
   const [location, setLocation] = useState(null);
   const [latitude, setLatitude] = useState(null);
   const [longitude, setLongitude] = useState(null);
   const [address, setAddress] = useState(null);
   const [coords, setCoords] = useState([]);
- 
+ useEffect(()=>{
+  console.log("Item Is   ",item)
+ },[])
   useEffect(() => {
     const getLocationPermissions = async () => {
       const { status } = await Location.getForegroundPermissionsAsync();
@@ -90,7 +96,57 @@ const TechnicianMap = () => {
     getLocationPermissions();
   }, []);
  const handleStartJourney=()=>{
-  alert('Starting')
+  // alert(`Starting ${serviceType} service`)
+  const dbRef= collection(db,'Notifications')
+  
+  if(serviceType=='quick'){
+  addDoc(dbRef,{
+customerId:item.customerId,
+customerName: item.customerName,
+serviceId: item.serviceId,
+serviceName:item.serviceName,
+techContact: item.requestedTechContact,
+requestedTechId: item.requestedTechId,
+status: 'sent',
+readByTechnician:'',
+readByCustomer:'',
+date: item.date,
+message: "TechShop Professional Is On The Way Please Be In Contact"
+  }).then(()=>{
+const docRef= doc(db,'QuickServices',docId)
+updateDoc(docRef,{
+  status: 'approved'
+})
+    ToastAndroid.show(`Notified ${item.customerName} For Serive Please Be In Contact! `,ToastAndroid.SHORT)
+  }).catch((err)=>{
+    console.log(err)
+  return  alert('Something Went Wrong')
+  })
+  }
+  else{
+    addDoc(dbRef,{
+      customerId:item.customerId,
+      customerName: item.customerName,
+      serviceId: item.serviceId,
+      techContact: item.techContact,
+      requestedTechId: item.techId,
+      serviceName:item.serviceName,
+      readByTechnician:'',
+readByCustomer:'',
+      status: 'sent',
+      time: item.time,
+      date: item.date,
+      message: "TechShop Professional Is On The Way Please Be In Contact"
+        }).then(()=>{
+          const docRef= (db,'ServiceRequests',docId)
+updateDoc(docRef,{
+  status: 'started'
+})
+ToastAndroid.show(`Notified ${item.customerName} For Serive Please Be In Contact! `,ToastAndroid.SHORT)
+        }).catch((err)=>{
+        return  alert('Something Went Wrong')
+        })
+  }
   const newCoords=[
     {
       latitude: latitude,

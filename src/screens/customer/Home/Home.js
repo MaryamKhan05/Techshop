@@ -54,42 +54,62 @@ const Home = ({ navigation }) => {
 
     getServices();
   }, []);
-  const searchService = (text) => {
-    if(!text){
-setFilterServiceData(data)
-setSearch(text)
-    }
-    else {
+//   const searchService = (text) => {
+//     if(!text){
+// setFilterServiceData(data)
+// setSearch(text)
+//     }
+//     else {
     
-      const filtering= data.filter((item)=>{
-        const name= item.serviceName.toLocaleLowerCase()
-        if(name.includes(text.toLocaleLowerCase())){
-          return item.name
-        }
-      })
-      setFilterServiceData(filtering)
-      setSearch(filtering)
-    }
+//       const filtering= filterServiceData.filter((item)=>{
+//         const name= item.serviceName.toLocaleLowerCase()
+//         if(name.includes(text.toLocaleLowerCase())){
+//           return item.name
+//         }
+//       })
+//       setFilterServiceData(filtering)
+//       setSearch(filtering)
+//     }
   
    
-  };
-
+//   };
+const searchService=(text)=>{
+  if(text==''){
+      setFilterServiceData(data)
+      setSearch(text)
+     }
+     else if(text){
+      const filteringData= data.filter(
+        (item)=>{
+        const data= item.serviceName.toLowerCase();
+          const entry= text;
+          if(data.includes(entry)){
+            return item.serviceName;
+          }
+        }
+        )
+        setFilterServiceData(filteringData);
+     
+        setSearch(filteringData.length > 0 ? filteringData[0].serviceName : '');
+       
+     }
+}
   return (
-        <KeyboardAvoidingView style={{flex:1}} behavior="height">
+     
     <View style={[CommonStyles.container, { justifyContent: "space-between" }]}>
       <View style={styles.headerView}>
           <Input
             borderColor={Colors.white}
             textColor={Colors.white}
             value={search}
-            onChangeText={(text) => {searchService(text)  }}
+            onChangeText={(text) => searchService(text.toLowerCase())}
             placeholder="Search Any Service..."
             title={"Search"}
           />
      
       </View>
-
       <View style={styles.body}>
+      <KeyboardAvoidingView style={{flex:1}} behavior="position">
         {
           loading && <ActivityIndicator size={'small'} style={{alignSelf:'center'}} color={Colors.deepBlue}/>
         }
@@ -105,7 +125,7 @@ setSearch(text)
               <Text style={styles.viewAllLabel}>View All</Text>
             </TouchableOpacity>
           </View>
-          <HorizontalList
+        {filterServiceData.length >0 ? <HorizontalList
             Data={filterServiceData}
             renderItem={({ item }) => {
               return (
@@ -140,6 +160,9 @@ setSearch(text)
               return item.image;
             }}
           />
+          :
+          <Text style={[styles.viewAllLabel,{alignSelf:'center',fontSize:16}]}>No Services Match Your Search</Text>
+          }
         </View>
         <View style={styles.containerView}>
           <View style={styles.rowHolder}>
@@ -178,9 +201,9 @@ setSearch(text)
           />
         </View>
       </ScrollView>}
+      </KeyboardAvoidingView>
       </View>
     </View>
-      </KeyboardAvoidingView>
   );
 };
 

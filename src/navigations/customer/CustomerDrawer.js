@@ -7,7 +7,7 @@ import ViewServices from '../../screens/customer/ViewServices'
 import Colors from '../../config/colors/Colors'
 import { DrawerContentScrollView,DrawerItem ,DrawerItemList} from '@react-navigation/drawer';
 import { DrawerActions, useNavigation } from "@react-navigation/native";
-import {MaterialCommunityIcons } from 'react-native-vector-icons/MaterialCommunityIcons'
+
 import Home from '../../screens/customer/Home/Home'
 import Services from '../../screens/customer/Services/Services'
 import SpareParts from '../../screens/customer/SpareParts/SpareParts'
@@ -22,6 +22,8 @@ import { auth } from '../../../firebase.config'
 import { signOut } from 'firebase/auth'
 import { ColorSpace } from 'react-native-reanimated'
 
+import { widthPercentageToDP } from 'react-native-responsive-screen'
+import { AntDesign, MaterialIcons,Ionicons,Entypo,MaterialCommunityIcons } from '@expo/vector-icons';
 const drawer =createDrawerNavigator()
 const CustomerDrawer=()=>{
     const navigation= useNavigation();
@@ -39,14 +41,15 @@ const CustomerDrawer=()=>{
                <DrawerContentScrollView {...props}>
       <DrawerItemList {...props} />
                 <TouchableOpacity
-                style={{ backgroundColor: itemColor?Colors.deepBlue:'white',marginHorizontal:wp('2.5%'),marginVertical:hp('0.5%'),paddingHorizontal:wp('5%'),paddingVertical:hp('1%')}}
+                style={{ backgroundColor: itemColor?Colors.deepBlue:'white',flexDirection:'row',justifyContent:'space-between',marginVertical:hp('0.5%'),paddingHorizontal:wp('5%'),paddingVertical:hp('1%')}}
                 onPress={()=>{
-                  console.log(auth.currentUser)
+                  
                   setItemColor(true)
                   console.log("Pressed")
                   signOut(auth).then(()=>{console.log('Logged out')}).catch((err)=>{console.log(err)})}}
                 >
-                  <Text style={{color: itemColor?Colors.white:Colors.deepBlue}}>Log Out</Text>
+                  <AntDesign name="logout" size={24} color={Colors.deepBlue}/>
+                  <Text style={{color: itemColor?Colors.white:Colors.deepBlue,fontWeight:'bold',flex:0.85,alignSelf:'flex-start'}}>Log Out</Text>
                 </TouchableOpacity>
       {/* <DrawerItem
         label="Settings"
@@ -65,21 +68,97 @@ const CustomerDrawer=()=>{
       <drawer.Navigator 
 
       drawerContent={CustomDrawerContent} 
-      screenOptions={{headerShown: true,drawerStyle:{width:350}}}
+      screenOptions={{headerShown: true,drawerStyle:{width:300},
+      headerRight: () => (
+        [
+<View style={{flexDirection:'row',width:widthPercentageToDP('25%'),justifyContent:'space-evenly'}}>
+
+          <TouchableOpacity
+          onPress={()=>{navigation.navigate('CustomerNotifications')}}
+          >
+  <Entypo name="bell" size={35} color={Colors.deepBlue} />
+              
+          </TouchableOpacity>
+       
+</View>
+          
+        ]
+       
+        )
+    }}
       
       >
          <drawer.Screen component={Home} name='Home' options={{drawerLabel:'Home',drawerActiveBackgroundColor:Colors.deepBlue,drawerActiveTintColor:Colors.white,
-         drawerInactiveTintColor:Colors.deepBlue
+         drawerInactiveTintColor:Colors.deepBlue,
+         drawerIcon: ({ focused, size }) => (
+        
+          <AntDesign name="home" size={24} color={focused?Colors.white: Colors.deepBlue}/>
+            
+          
+        ),
+        
+        }}/>
+         <drawer.Screen component={Services} name='Services' options={{drawerLabel:'Services',drawerActiveBackgroundColor:Colors.deepBlue,drawerActiveTintColor:Colors.white, drawerInactiveTintColor:Colors.deepBlue,
+       drawerIcon: ({ focused, size }) => (
+        
+        <AntDesign name="heart" size={24} color={focused?Colors.white: Colors.deepBlue}/>
+          
+        
+      ),
+        }}/>
+         <drawer.Screen component={SpareParts} name='SpareParts' options={{drawerLabel:'SpareParts',drawerActiveBackgroundColor:Colors.deepBlue,drawerActiveTintColor:Colors.white, drawerInactiveTintColor:Colors.deepBlue,
+        drawerIcon: ({ focused, size }) => (
+        
+          <MaterialCommunityIcons name="car-battery" size={24} color={focused?Colors.white: Colors.deepBlue}/>
+            
+          
+        ),
+        }}/>
+         <drawer.Screen component={Vechiles} name='Vechiles' options={{drawerLabel:'Vechiles',drawerActiveBackgroundColor:Colors.deepBlue,drawerActiveTintColor:Colors.white, drawerInactiveTintColor:Colors.deepBlue,
+          drawerIcon: ({ focused, size }) => (
+        
+            <AntDesign name="car" size={24} color={focused?Colors.white: Colors.deepBlue}/>
+              
+            
+          ),
+        }}/>
+         <drawer.Screen component={SellVechileForm} name='SellVechileForm' options={{drawerLabel:'Sell Vechile',drawerActiveBackgroundColor:Colors.deepBlue,drawerActiveTintColor:Colors.white, drawerInactiveTintColor:Colors.deepBlue,
+         drawerIcon: ({ focused, size }) => (
+        
+          <Ionicons name="cash" size={24} color={focused?Colors.white: Colors.deepBlue}/>
+            
+          
+        ),
         
         
         }}/>
-         <drawer.Screen component={Services} name='Services' options={{drawerLabel:'Services',drawerActiveBackgroundColor:Colors.deepBlue,drawerActiveTintColor:Colors.white, drawerInactiveTintColor:Colors.deepBlue}}/>
-         <drawer.Screen component={SpareParts} name='SpareParts' options={{drawerLabel:'SpareParts',drawerActiveBackgroundColor:Colors.deepBlue,drawerActiveTintColor:Colors.white, drawerInactiveTintColor:Colors.deepBlue}}/>
-         <drawer.Screen component={Vechiles} name='Vechiles' options={{drawerLabel:'Vechiles',drawerActiveBackgroundColor:Colors.deepBlue,drawerActiveTintColor:Colors.white, drawerInactiveTintColor:Colors.deepBlue}}/>
-         <drawer.Screen component={SellVechileForm} name='SellVechileForm' options={{drawerLabel:'Sell Vechile',drawerActiveBackgroundColor:Colors.deepBlue,drawerActiveTintColor:Colors.white, drawerInactiveTintColor:Colors.deepBlue}}/>
-         <drawer.Screen component={ServiceStatus} name='ServiceStatus' options={{drawerLabel:'Service Request Status',drawerActiveBackgroundColor:Colors.deepBlue,drawerActiveTintColor:Colors.white, drawerInactiveTintColor:Colors.deepBlue}}/>
-         <drawer.Screen component={SparePartStatus} name='SparePartStatus' options={{drawerLabel:'Spare Part Request Status',drawerActiveBackgroundColor:Colors.deepBlue,drawerActiveTintColor:Colors.white, drawerInactiveTintColor:Colors.deepBlue}}/>
-         <drawer.Screen component={VechileAdStatus} name='VechileAdStatus' options={{drawerLabel:'Vechile Ad Status',drawerActiveBackgroundColor:Colors.deepBlue,drawerActiveTintColor:Colors.white, drawerInactiveTintColor:Colors.deepBlue}}/>
+         <drawer.Screen component={ServiceStatus} name='ServiceStatus' options={{drawerLabel:'Service Request Status',drawerActiveBackgroundColor:Colors.deepBlue,drawerActiveTintColor:Colors.white, drawerInactiveTintColor:Colors.deepBlue,
+        
+        drawerIcon: ({ focused, size }) => (
+        
+          <MaterialCommunityIcons name="calendar-heart" size={24} color={focused?Colors.white: Colors.deepBlue}/>
+            
+          
+        ),
+      
+        }}/>
+         <drawer.Screen component={SparePartStatus} name='SparePartStatus' options={{drawerLabel:'Spare Part Request Status',drawerActiveBackgroundColor:Colors.deepBlue,drawerActiveTintColor:Colors.white, drawerInactiveTintColor:Colors.deepBlue,
+          drawerIcon: ({ focused, size }) => (
+        
+            <MaterialIcons
+            name="category"size={24} color={focused?Colors.white: Colors.deepBlue}/>
+              
+            
+          ),
+        }}/>
+         <drawer.Screen component={VechileAdStatus} name='VechileAdStatus' options={{drawerLabel:'Vechile Ad Status',drawerActiveBackgroundColor:Colors.deepBlue,drawerActiveTintColor:Colors.white, drawerInactiveTintColor:Colors.deepBlue,
+         drawerIcon: ({ focused, size }) => (
+        
+          <MaterialIcons name="local-car-wash" size={24} color={focused?Colors.white: Colors.deepBlue}/>
+            
+          
+        ),
+        }}/>
         
       </drawer.Navigator>
     )
