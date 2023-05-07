@@ -47,6 +47,7 @@ const Input = ({
         value={value}
         onChangeText={onChangeText}
         keyboardType={keyboardType ? keyboardType : "default"}
+        // autoCapitalize={false}
       />
     </View>
   );

@@ -6,14 +6,14 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { View, Text, TouchableOpacity, Image } from "react-native";
+import { View, Text, Image } from "react-native";
 import Colors from "../../config/colors/Colors";
 
 const SparePartsCard = ({
   image,
   name,
-  PriceOne,
-  PriceTwo,
+  desc,
+  price,
   onPress,
   height,
   width,
@@ -81,12 +81,12 @@ const SparePartsCard = ({
                 fontWeight: "bold",
               }}
             >
-              Original Price :
+              Description:
             </Text>
             <Text
               style={{ color: Colors.black, fontSize: 16, fontWeight: "bold" }}
             >
-              Rs {PriceOne}
+              {desc}
             </Text>
           </View>
           <View
@@ -103,12 +103,12 @@ const SparePartsCard = ({
                 fontWeight: "bold",
               }}
             >
-              Selling Price :
+              Price :
             </Text>
             <Text
               style={{ color: Colors.black, fontSize: 16, fontWeight: "bold" }}
             >
-              Rs {PriceTwo}
+              {price}
             </Text>
           </View>
           <View style={{ alignSelf: "center" }}>

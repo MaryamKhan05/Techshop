@@ -5,6 +5,8 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import { getDocs, collection } from "firebase/firestore";
+import { db } from "../../../../firebase.config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Colors from "../../../config/colors/Colors";
 import Card from "../../../components/Card/Card";
@@ -55,6 +57,7 @@ import Card from "../../../components/Card/Card";
 const SparePartsReq = ({ navigation }) => {
   const [partService, setPartService] = useState([]);
   const [parts, setParts] = useState([]);
+  const [spareParts, setSpareParts] = useState([]);
 
   // useEffect(() => {
   //   const getParts = async () => {
@@ -71,29 +74,55 @@ const SparePartsReq = ({ navigation }) => {
   //   getParts();
   // }, []);
 
+  // useEffect(() => {
+  //   const getParts = async () => {
+  //     const d = [];
+  //     const dbRef = collection(db, "SpareParts");
+  //     const querySnapshot = await getDocs(dbRef);
+
+  //     querySnapshot.forEach((doc) => {
+  //       d.push(doc.parts());
+  //     });
+
+  //     setParts(d);
+  //   };
+
+  //   getParts();
+  // }, []);
+
+  // useEffect(() => {
+  //   const dbref = collection(db, "SpareParts");
+  //   const unsubscribe = onSnapshot(dbref, (querySnapshot) => {
+  //     const data = [];
+  //     querySnapshot.forEach((doc) => {
+  //       data.push({ id: doc.id, ...doc.data() });
+  //     });
+  //     setSpareParts(data);
+  //   });
+
+  //   return () => unsubscribe();
+  // }, []);
   useEffect(() => {
-    const getParts = async () => {
+    const getServices = async () => {
       const d = [];
-      const dbRef = collection(db, "SpareParts");
+
+      const dbRef = collection(db, "SparePartReq");
       const querySnapshot = await getDocs(dbRef);
 
       querySnapshot.forEach((doc) => {
-        d.push(doc.parts());
+        d.push(doc.data());
       });
 
-      setParts(d);
+      setReq(d);
     };
 
-    getParts();
+    getServices();
   }, []);
-
   // FUNCTION TO ADD NEW SPARE PARTS
   // const handleAddParts = (newParts) => {
   //   console.log("parts received on spare screen", newParts);
   //   setParts([...parts, newParts]);
   // };
-
-
 
   //FUNCTION TO DELETE THE EXISTING SPARE PARTS
   const handleDelete = async (item) => {
@@ -185,9 +214,9 @@ const SparePartsReq = ({ navigation }) => {
               }}
             >
               <Text style={styles.serviceName}>{item.serviceName}</Text>
-              <Text style={styles.serviceDescription}>{item.description}</Text>
+              <Text style={styles.serviceDescription}>{item.serviceDescription}</Text>
               <Text style={styles.serviceDescription}>{item.company}</Text>
-              <Text style={styles.serviceDescription}>{item.price}</Text>
+              <Text style={styles.serviceDescription}>{item.servicePrice}</Text>
             </View>
           </View>
 
@@ -223,7 +252,7 @@ const SparePartsReq = ({ navigation }) => {
       >
         <FlatList
           data={parts}
-          keyExtractor={(item) => item.id.toString()}
+          // keyExtractor={(item) => item.id.toString()}
           renderItem={renderItem}
         />
       </View>
@@ -234,6 +263,18 @@ const SparePartsReq = ({ navigation }) => {
       />
     </View>
   );
+
+  // return (
+  //   <View>
+  //     {parts.map((part) => (
+  //       <View key={part.id}>
+  //         <Text>{part.serviceName}</Text>
+  //         <Text>{part.serviceDescription}</Text>
+  //         {/* Add more fields as needed */}
+  //       </View>
+  //     ))}
+  //   </View>
+  // );
 };
 
 const styles = StyleSheet.create({

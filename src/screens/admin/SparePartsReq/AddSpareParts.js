@@ -45,14 +45,11 @@ const AddParts = ({ navigation, route }) => {
   const [description, setDescription] = useState("");
   const [imageData, setImageData] = useState(null);
 
-
-
-
-  const validate=()=>{
-    if(serviceName==""){
-      return alert("Spare Part Name is Required")
+  const validate = () => {
+    if (serviceName == "") {
+      return alert("Spare Part Name is Required");
     }
-  }
+  };
   const imageUpload = async () => {
     const blobImage = await new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
@@ -124,7 +121,6 @@ const AddParts = ({ navigation, route }) => {
     );
   };
 
-
   const clearFields = () => {
     // setPickedImage("");
     // setServiceCharges("");
@@ -132,25 +128,24 @@ const AddParts = ({ navigation, route }) => {
     setDescription("");
   };
 
-
-  const handleSave = async (imageUrl)=>{
-
-    const dbref= collection(db,"SpareParts") 
+  const handleSave = async (imageUrl) => {
+    const dbref = collection(db, "SpareParts");
     addDoc(dbref, {
       date: new Date().toDateString(),
       serviceName,
       // serviceCharges,
       serviceDescription: description,
+      servicePrice: price,
       // image: imageUrl,
     })
-    .then(() => {
-      ToastAndroid.show("Spare Part Added ", ToastAndroid.SHORT);
-      clearFields();
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-  }
+      .then(() => {
+        ToastAndroid.show("Spare Part Added ", ToastAndroid.SHORT);
+        clearFields();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const handleSelectImage = () => {
     const options = {
@@ -188,7 +183,7 @@ const AddParts = ({ navigation, route }) => {
     }
   };
   return (
-    <SafeAreaView style={[CommonStyles.container, {  }]}>
+    <SafeAreaView style={[CommonStyles.container, {}]}>
       <ScrollView
         // keyboardShouldPersistTaps="handled"
         // contentContainerStyle={{ padding: 10 }}
@@ -198,10 +193,12 @@ const AddParts = ({ navigation, route }) => {
         // behavior={Platform.OS =  1   == 'ios' ? 'padding' : 'height'}
         >
           <View
-            style={{
-              // padding: hp("2"),
-              // flex: 0.9,
-            }}
+            style={
+              {
+                // padding: hp("2"),
+                // flex: 0.9,
+              }
+            }
           >
             <Header headerTitle="Add New Service" />
             <Spacer />
