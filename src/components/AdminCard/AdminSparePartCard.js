@@ -17,11 +17,12 @@ import {
 import Colors from "../../config/colors/Colors";
 
 const AdminSparePartCard = ({
+  address,
   name,
-  price,
-  car,
+  customer,
+  time,
+  desc,
   company,
-  quantity,
   width,
   height,
   onPress,

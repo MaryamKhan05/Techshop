@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Button from "../../../components/Button/Button";
 import SparePartsCard from "../../../components/SparePartsCard/SparePartsCard";
@@ -25,6 +25,7 @@ const Home = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [AdminServices, setAdminServices] = useState([]);
   const [AdminSpareParts, setAdminSpareParts] = useState([]);
+
   useEffect(() => {
     const getServices = async () => {
       const dbRef = collection(db, "Services");
@@ -35,23 +36,18 @@ const Home = ({ navigation }) => {
     };
     getServices();
   }, []);
+
   useEffect(() => {
     const getServices = async () => {
-      const dbRef = collection(db, "SparePartReq");
+      const dbRef = collection(db, "SpareParts");
       const snapshot = await getDocs(dbRef);
-      const requests = snapshot.docs.map((item) => item.data());
-      setAdminSpareParts(requests);
+      const data = snapshot.docs.map((item) => item.data());
+      setAdminSpareParts(data);
       setLoading(false);
     };
     getServices();
   }, []);
-  //   const getSpareParts=async()=>{
-  //     const dbRef= collection(db,'SpareParts')
-  //     const snapshot= await getDocs(dbRef)P
-  // const data= snapshot.docs.map((item)=>item.data())
-  // setAdminSpareParts(data)
-  //     setLoading(false)
-  //   }
+
   return (
     <View style={{ flex: 1, justifyContent: "center" }}>
       {loading ? (
@@ -75,13 +71,6 @@ const Home = ({ navigation }) => {
             }}
           >
             <Text style={styles.categoryLabel}>Services Requests</Text>
-            {/* <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("Services");
-            }}
-          >
-            <Text style={styles.viewAllLabel}>View All</Text>
-          </TouchableOpacity> */}
           </View>
           <HorizontalList
             Data={AdminServices}
@@ -127,48 +116,22 @@ const Home = ({ navigation }) => {
             renderItem={({ item }) => {
               return (
                 <View style={{ paddingHorizontal: hp("2%") }}>
-                  {/* <AdminSparePartCard
-                  name={item.sparepartName}
-                  company={item.customerName}
-                  car={item.carName}
-                  quantity={item.quantity}
-                  price={item.sellingprice}
-                  image={item.image}
-                  width={hp("20")}
-                  time={item.time}
-                  onPress={() => {
-                    navigation.navigate("Detail", {
-                      name: item.serviceName,
-                      customer: item.customerName,
-                      address: item.customerAdress,
-                      time: item.time,
-                      desc: item.description,
-                      image: item.image,
-                    });
-                  }}
-                /> */}
-                  <Card>
-                    <TouchableOpacity
-                      onPress={() => {
-                        navigation.navigate("Detail", {
-                          name: item.serviceName,
-                          customer: item.customerName,
-                          address: item.customerAdress,
-                          time: item.time,
-                          desc: item.description,
-                          image: item.image,
-                        });
-                      }}
-                    >
-                      <Text>{item.customerName}</Text>
-                    </TouchableOpacity>
-                  </Card>
+                  <AdminServiceCard
+                    service={item.serviceName}
+                    image={item.image}
+                    width={hp("20")}
+                    onPress={() => {
+                      navigation.navigate("SparePartDetail", {
+                        requestCategory: item.serviceName,
+                      });
+                    }}
+                  />
                 </View>
               );
             }}
-            // keyExtractor={(item) => {
-            //   return item.id.toString();
-            // }}
+            keyExtractor={(item, index) => {
+              return index.toString();
+            }}
           />
         </View>
       )}
@@ -200,6 +163,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: Colors.red,
     fontWeight: "bold",
+  },
+  serviceImage: {
+    width: wp("30"),
+    height: hp("20"),
+    borderRadius: 10,
+    marginRight: 10,
   },
 });
 

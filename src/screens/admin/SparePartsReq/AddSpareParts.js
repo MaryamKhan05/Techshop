@@ -44,10 +44,15 @@ const AddParts = ({ navigation, route }) => {
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
   const [imageData, setImageData] = useState(null);
+  const [pickedImage, setPickedImage] = useState("");
 
   const validate = () => {
     if (serviceName == "") {
       return alert("Spare Part Name is Required");
+    } else if (description == "") {
+      return alert("Service Description Is Required");
+    } else {
+      imageUpload();
     }
   };
   const imageUpload = async () => {
@@ -126,6 +131,7 @@ const AddParts = ({ navigation, route }) => {
     // setServiceCharges("");
     setServiceName("");
     setDescription("");
+    navigation.navigate("SparePartsReq");
   };
 
   const handleSave = async (imageUrl) => {
@@ -136,12 +142,17 @@ const AddParts = ({ navigation, route }) => {
       // serviceCharges,
       serviceDescription: description,
       servicePrice: price,
-      // image: imageUrl,
+      image: imageUrl,
     })
       .then(() => {
         ToastAndroid.show("Spare Part Added ", ToastAndroid.SHORT);
         clearFields();
+        navigation.goBack();
       })
+      .then(() => {
+        navigation.goBack();
+      })
+
       .catch((err) => {
         console.log(err);
       });
@@ -200,7 +211,7 @@ const AddParts = ({ navigation, route }) => {
               }
             }
           >
-            <Header headerTitle="Add New Service" />
+            <Header headerTitle="Add Spare Part" />
             <Spacer />
             {/* <Text style={styles.text}>Part Name:</Text> */}
             <Input
@@ -231,9 +242,58 @@ const AddParts = ({ navigation, route }) => {
               style={styles.textInput}
               placeholder="Enter Price"
             />
+            <View
+              style={{
+                borderRadius: 10,
+                elevation: 2,
+                backgroundColor: Colors.white,
+                padding: hp("2%"),
+                alignItems: "center",
+                margin: wp("1%"),
+              }}
+            >
+              {pickedImage && (
+                <Image
+                  source={{ uri: pickedImage }}
+                  style={{
+                    width: wp("70%"),
+                    marginVertical: hp("1%"),
+                    height: hp("15%"),
+                  }}
+                  resizeMode="contain"
+                />
+              )}
+              {!pickedImage && (
+                <Image
+                  source={{
+                    uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDfd37kUihRkyoe3DHC2mwwmVFMGjt-pZbVA&usqp=CAU",
+                  }}
+                  style={{
+                    width: wp("50%"),
+                    marginVertical: hp("1%"),
+                    height: hp("15%"),
+                  }}
+                  resizeMode="contain"
+                />
+              )}
+              <Button
+                title="Upload Service Image"
+                backgroundColor={Colors.deepBlue}
+                borderRadius={5}
+                onPress={() => {
+                  pickImage();
+                }}
+              />
+            </View>
             <Spacer />
           </View>
-          <Button title="Save" onPress={handleSave} />
+          <Button 
+          title="Save" 
+          // onPress={handleSave} 
+          onPress={() => {
+            validate();
+          }}
+          />
         </KeyboardAvoidingView>
       </ScrollView>
     </SafeAreaView>

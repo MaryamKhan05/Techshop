@@ -106,14 +106,14 @@ const SparePartsReq = ({ navigation }) => {
     const getServices = async () => {
       const d = [];
 
-      const dbRef = collection(db, "SparePartReq");
+      const dbRef = collection(db, "SpareParts");
       const querySnapshot = await getDocs(dbRef);
 
       querySnapshot.forEach((doc) => {
         d.push(doc.data());
       });
 
-      setReq(d);
+      setParts(d);
     };
 
     getServices();
@@ -200,12 +200,7 @@ const SparePartsReq = ({ navigation }) => {
                 justifyContent: "center",
               }}
             >
-              <Image
-                source={{
-                  uri: "https://img.freepik.com/free-vector/car-wheel-realistic_1284-4977.jpg?size=626&ext=jpg&uid=R94214209&ga=GA1.2.1081558094.1677063520&semt=sph",
-                }}
-                style={styles.serviceImage}
-              />
+              <Image source={{ uri: item.image }} style={styles.serviceImage} />
             </View>
             <View
               style={{
@@ -214,7 +209,9 @@ const SparePartsReq = ({ navigation }) => {
               }}
             >
               <Text style={styles.serviceName}>{item.serviceName}</Text>
-              <Text style={styles.serviceDescription}>{item.serviceDescription}</Text>
+              <Text style={styles.serviceDescription}>
+                {item.serviceDescription}
+              </Text>
               <Text style={styles.serviceDescription}>{item.company}</Text>
               <Text style={styles.serviceDescription}>{item.servicePrice}</Text>
             </View>

@@ -15,6 +15,7 @@ const RequestSparePart = ({ navigation, route }) => {
   const { name, price } = route.params;
   const [loading, setLoading] = useState(false);
   const [sparePartName, setSparePartName] = useState(name);
+  const [requestCategory, setRequestCategory] = useState("");
   const [customerName, setCustomerName] = useState("Hammad");
   const [customerAddress, setCustomerAddress] = useState(
     "Farooq Coorperation Murree Road Shamsabad  Rawalpindi"
@@ -39,6 +40,7 @@ const RequestSparePart = ({ navigation, route }) => {
       modalYear,
       modalName: modal ? modal : "",
       status: "pending",
+      requestCategory: sparePartName,
     })
       .then(() => {
         setLoading(false);

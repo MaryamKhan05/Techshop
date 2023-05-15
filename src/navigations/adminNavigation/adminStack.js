@@ -16,6 +16,7 @@ import AddParts from "../../screens/admin/SparePartsReq/AddSpareParts";
 import EditSpareParts from "../../screens/admin/SparePartsReq/EditSpareParts";
 import RequestApprovalScreen from "../../screens/admin/ServiceDetail/RequestApproval";
 import LoginScreen from "../../screens/auth/admin/AdminLogin";
+import SparePartDetail from "../../screens/admin/SparePartsReq/SparePartDetail";
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from '../../../firebase.config'
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -126,6 +127,11 @@ checkUser()
           name="ServiceDetailsNotified"
           component={ServiceDetailsNotified}
           options={{ headerShown: true,headerTitle:'Service Details' }}
+        />
+        <Stack.Screen
+          name="SparePartDetail"
+          component={SparePartDetail}
+          options={{ headerShown: true,headerTitle:'Spare Part Details' }}
         />
         </Stack.Group>:
          <Stack.Group>
