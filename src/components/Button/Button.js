@@ -18,7 +18,7 @@ borderRadius
             <TouchableOpacity
             onPress={onPress}
             style={[styles.button,{
-                backgroundColor:backgroundColor?backgroundColor: Colors.red,
+                backgroundColor:backgroundColor?backgroundColor: Colors.deepBlue,
                 height:height?height: hp('6%'),
                 width:width?width: wp('80%'),
                 borderRadius: borderRadius?borderRadius: 100

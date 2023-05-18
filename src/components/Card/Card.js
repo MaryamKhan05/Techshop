@@ -17,7 +17,7 @@ export default Card
 const styles=StyleSheet.create({
     card:{
         elevation: 10,
-        backgroundColor: Colors.white,
+        backgroundColor:'white',
         shadowColor: Colors.deepBlue,
         alignSelf:'center',
         paddingHorizontal: wp('2%'),

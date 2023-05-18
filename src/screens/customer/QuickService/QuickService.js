@@ -29,7 +29,7 @@ const RequestQuickService=({navigation,route})=>{
     const[technicianContact,setTechnicianContact]=useState('')
     const[allTechnicians,setAllTechnicians]=useState([])
     const[loading,setLoading]=useState(true)
-    const[postloading,setPostLoading]=useState(true)
+    const[postloading,setPostLoading]=useState(false)
     useEffect(()=>{
 AsyncStorage.getItem('UserName').then((val)=>{
 
@@ -37,6 +37,7 @@ setCustomerName(val)
 }).then(()=>{
   AsyncStorage.getItem('UserPhoneNo').then((val)=>{
     setCustomerContactNo(val)
+    setLoading(false)
 
   })
 })

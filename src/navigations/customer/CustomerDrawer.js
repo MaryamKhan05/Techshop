@@ -83,7 +83,10 @@ const CustomerDrawer=()=>{
           
         ]
        
-        )
+        ),
+        headerTintColor: Colors.deepBlue,
+        // headerStyle:{backgroundColor:Colors.white}
+        
     }}
       
       >

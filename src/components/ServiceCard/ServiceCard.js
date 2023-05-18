@@ -28,13 +28,13 @@ const ServiceCard=(
 
     <Image
     source={{uri: image}}
-   style={{height: hp('12%'),width: wp('24%'),borderRadius:20}}
+   style={{height: hp('10%'),width: wp('20%'),borderRadius:9999}}
    resizeMode='contain'
    />
 </View>
-<View>
+<View >
 
-       <Text style={{color: Colors.black, fontSize: 20,fontWeight:'bold'}}>{name}</Text>
+       <Text style={{color: Colors.black, fontSize: 18,fontWeight:'bold'}}>{name}</Text>
        <Text style={{color: Colors.deepBlue, fontSize: 14,fontWeight:'300',textAlign:'center'}}>{desc}</Text>
 </View>
     </View>

@@ -23,10 +23,28 @@ import { getDocs, collection } from "firebase/firestore";
 import { db } from "../../../../firebase.config";
 const Services = ({ navigation }) => {
   const [search, setSearch] = useState("");
-  const searchService = (text) => {
-    console.log("text recieved", text);
-  };
   const [data, setData] = useState([]);
+  const [filtereddata, setFilteredData] = useState([]);
+  const searchService = (text) => {
+    setSearch(text)
+    if(text==''){
+      setSearch(text)
+      setFilteredData(data)
+    }
+    else{
+      // console.log(data)
+      const searchFilter = data.filter((item) => {
+        const name=item.serviceName.toLowerCase()
+        const entry=text.toLowerCase()
+        if(name.includes(entry)){
+          return item
+        }
+      });
+      // console.log("Filter Data is  ",searchFilter)
+      setFilteredData(searchFilter)
+      setSearch(searchFilter)
+    }
+  };
   useEffect(() => {
     const getServices = async () => {
       const d = [];
@@ -37,23 +55,22 @@ const Services = ({ navigation }) => {
       querySnapshot.forEach((doc) => {
         d.push(doc.data());
       });
-
+setFilteredData(d)
       setData(d);
     };
 
     getServices();
   }, []);
+  
   return (
     <View style={CommonStyles.container}>
       <View style={styles.headerView}>
         <KeyboardAvoidingView behavior="position">
           <Input
-            borderColor={Colors.white}
-            textColor={Colors.white}
+            borderColor={Colors.deepBlue}
+            textColor={Colors.deepBlue}
             value={search}
-            onChangeText={(text) => {
-              setSearch(text);
-            }}
+            onChangeText={(text) => {searchService(text); }}
             placeholder="Search Any Service..."
             title={"Search"}
           />
@@ -61,7 +78,7 @@ const Services = ({ navigation }) => {
       </View>
       <View style={styles.body}>
         <VerticalList
-          Data={data}
+          Data={filtereddata}
           renderItem={({ item }) => {
             return (
               <View
@@ -112,13 +129,13 @@ const styles = StyleSheet.create({
     // height: hp('25%'),
     flex: 0.2,
     justifyContent: "center",
-    backgroundColor: Colors.deepBlue,
+    // backgroundColor: Colors.deepBlue,
   },
   body: {
     // height: hp('75%'),
     borderRadius: 30,
     flex: 0.8,
-    backgroundColor: Colors.white,
+    // backgroundColor: Colors.white,
     justifyContent: "center",
   },
   headTitle: {

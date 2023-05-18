@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, StyleSheet, Image } from "react-native";
+import { View, Text, TextInput, StyleSheet, Image, ToastAndroid } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
@@ -11,29 +11,28 @@ import Colors from "../../../config/colors/Colors";
 import { Spacer } from "../../../components/Spacer/Spacer";
 import Header from "../../../components/Header/Header";
 import Input from "../../../components/Input/Input";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "../../../../firebase.config";
 const EditService = ({ route, navigation }) => {
-  const { item, handleUpdateService } = route.params;
-  const [serviceName, setServiceName] = useState(item.serviceName);
-  const [customerName, setCustomerName] = useState(item.customerName);
-  const [customerAddress, setCustomerAddress] = useState(item.customerAddress);
-  const [requestDate, setRequestDate] = useState(item.requestDate);
-  const [time, setTime] = useState(item.time);
-  const [description, setDescription] = useState(item.description);
+  const {item, docId } = route.params;
+  console.log("Doc Id is  "+docId)
+  const [serviceCharges, setserviceCharges] = useState(item.serviceCharges);
+
 
   const handleSaveChanges = async () => {
-    const updatedService = {
-      id: item.id,
-      serviceName: serviceName,
-      customerName: customerName,
-      customerAddress: customerAddress,
-      requestDate: requestDate,
-      time: time,
-      description: description,
-      image: item.image,
-    };
-
-    await handleUpdateService(updatedService);
-    navigation.goBack();
+  
+const docRef= doc(db,'Services',docId)
+updateDoc(docRef,{
+  serviceCharges: serviceCharges
+}).then(()=>{
+ToastAndroid.show('Service Charges Revised Successfully',ToastAndroid.SHORT)
+navigation.goBack();
+}).catch((err)=>{
+  console.log("error inn service Edit",err)
+   alert('Something Went Wrong Please Try Again')
+   navigation.goBack();
+})
+    
   };
   return (
     <SafeAreaView style={styles.container}>
@@ -46,30 +45,32 @@ const EditService = ({ route, navigation }) => {
           }
         }
       >
-        {/* <Image
-          source={{ uri: item.image }}
-          style={{
-            width: wp("10"),
-            height: hp("10"),
-            backgroundColor: "pink",
-          }}
-        /> */}
+        <Text style={[styles.text,{alignSelf:'center'}]}>You Can Only Edit The Service Charges</Text>
+       
         <Input
           // style={styles.textInput}
           title={"Service Name"}
-          placeholder={"Enter Service Name"}
-          onChangeText={(text) => setServiceName(text)}
-          value={serviceName}
+          
+          disabled
+          value={item.serviceName}
         />
         <Input
-          title={"Service Name"}
-          placeholder={"Enter Service Name"}
-          onChangeText={(text) => setDescription(text)}
-          value={description}
+          // style={styles.textInput}
+          title={"Service Description"}
+          disabled
+          value={item.serviceDescription}
         />
+        <Input
+          // style={styles.textInput}
+          title={"Service Price"}
+          placeholder={"Enter New Service Price"}
+          onChangeText={(text) => setserviceCharges(text)}
+          value={serviceCharges}
+        />
+
       </View>
       <Spacer />
-      <Button title="Update Service" onPress={handleSaveChanges} />
+      <Button title="Update Service Price" onPress={handleSaveChanges} />
     </SafeAreaView>
   );
 };

@@ -77,7 +77,7 @@ const CustomerNavigations = () => {
             name="CustomerNotifications"
             options={{
               headerShown: true,
-              headerTitle: "Request Spare Parts",
+              headerTitle: "Notifications",
               headerTitleAlign: "center",
             }}
           />
@@ -86,7 +86,7 @@ const CustomerNavigations = () => {
             name="ServiceDetails"
             options={{
               headerShown: true,
-              headerTitle: "Request Spare Parts",
+              headerTitle: "Service Details",
               headerTitleAlign: "center",
             }}
           />

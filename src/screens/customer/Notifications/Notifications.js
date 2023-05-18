@@ -56,95 +56,95 @@ useEffect(() => {
     getUpdates();
   }, []);
   return (
-    // <View style={[CommonStyles.container, { justifyContent: "flex-start" }]}>
-    //   <Text
-    //     style={[
-    //       styles.notiText,
-    //       { fontSize: 22, alignSelf: "center", margin: hp("2%") },
-    //     ]}
-    //   >
-    //     My Schedule Alerts
-    //   </Text>
-    //   {loading ? (
-    //     <ActivityIndicator
-    //       size={"small"}
-    //       color={Colors.deepBlue}
-    //       style={{ alignSelf: "center" }}
-    //     />
-    //   ) : (
-    //     <VerticalList
-    //       Data={notifications}
-    //       numColumns={1}
-    //       renderItem={({ item, index }) => {
-    //         return (
-    //           <TouchableOpacity
-    //             onPress={() => {
-    //               setReadNotiIndex(index);
-    //               navigation.navigate("ServiceDetails", {
-    //                 item,
-    //               });
-    //             }}
-    //             style={[
-    //               styles.card,
-    //               {
-    //                 backgroundColor:
-    //                   item.readByCustomer == "read"
-    //                     ? Colors.white
-    //                     : index == readNotiIndex
-    //                     ? Colors.white
-    //                     : Colors.deepBlue,
-    //               },
-    //             ]}
-    //           >
-    //             <Text
-    //               style={[
-    //                 styles.notiText,
-    //                 {
-    //                   color:
-    //                     item.readByCustomer == "read"
-    //                       ? Colors.black
-    //                       : index == readNotiIndex
-    //                       ? Colors.black
-    //                       : Colors.white,
-    //                 },
-    //               ]}
-    //             >
-    //               {" "}
-    //               You Have A {item.serviceName} Service
-    //             </Text>
-    //             <Text
-    //               style={[
-    //                 styles.date,
-    //                 {
-    //                   color:
-    //                     item.readByCustomer == "read"
-    //                       ? Colors.black
-    //                       : index == readNotiIndex
-    //                       ? Colors.black
-    //                       : Colors.white,
-    //                 },
-    //               ]}
-    //             >
-    //               {item.date} {item?.time}
-    //             </Text>
-    //           </TouchableOpacity>
-    //         );
-    //       }}
-    //       keyExtractor={(item, index) => {
-    //         return index.toString();
-    //       }}
-    //     />
-    //   )}
-    // </View>
-
-    <View>
-      {partNotifications.map((notification) => (
-        <View key={notification.id}>
-          <Text>{notification.message}</Text>
-          {/* <Text>{notification.timestamp.toDate().toLocaleString()}</Text> */}
-        </View>
-      ))}
+    <View style={[CommonStyles.container, { justifyContent: "flex-start" }]}>
+      <Text
+        style={[
+          styles.notiText,
+          { fontSize: 22, alignSelf: "center", margin: hp("2%") },
+        ]}
+      >
+        My Schedule Alerts
+      </Text>
+      {loading ? (
+        <ActivityIndicator
+          size={"small"}
+          color={Colors.deepBlue}
+          style={{ alignSelf: "center" }}
+        />
+      ) : (
+        <VerticalList
+          Data={notifications}
+          numColumns={1}
+          renderItem={({ item, index }) => {
+            return (
+              <TouchableOpacity
+                onPress={() => {
+                  setReadNotiIndex(index);
+                  navigation.navigate("ServiceDetails", {
+                    item,
+                  });
+                }}
+                style={[
+                  styles.card,
+                  {
+                    backgroundColor:
+                      item.readByCustomer == "read"
+                        ? Colors.white
+                        : index == readNotiIndex
+                        ? Colors.white
+                        : Colors.deepBlue,
+                  },
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.notiText,
+                    {
+                      color:
+                        item.readByCustomer == "read"
+                          ? Colors.black
+                          : index == readNotiIndex
+                          ? Colors.black
+                          : Colors.white,
+                    },
+                  ]}
+                >
+                  {" "}
+                  You Have A {item.serviceName} Service
+                </Text>
+                <Text
+                  style={[
+                    styles.date,
+                    {
+                      color:
+                        item.readByCustomer == "read"
+                          ? Colors.black
+                          : index == readNotiIndex
+                          ? Colors.black
+                          : Colors.white,
+                    },
+                  ]}
+                >
+                  {item.date} {item?.time}
+                </Text>
+              </TouchableOpacity>
+            );
+          }}
+          keyExtractor={(item, index) => {
+            return index.toString();
+          }}
+        />
+      )}
     </View>
+
+    // <View>
+    //   {partNotifications.map((notification) => (
+    //     <View key={notification.id}>
+    //       <Text>{notification.message}</Text>
+    //       {/* <Text>{notification.timestamp.toDate().toLocaleString()}</Text> */}
+    //     </View>
+    //   ))}
+    // </View>
   );
 
 

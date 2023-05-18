@@ -18,9 +18,11 @@ import {
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
 import Colors from "../../../config/colors/Colors";
+import { ActivityIndicator } from "react-native";
 const SpareParts = ({ navigation }) => {
   const [search, setSearch] = useState("");
   const [parts, setParts] = useState([]);
+  const[loading,setloading]=useState(true)
   const searchService = (text) => {
     console.log("text recieved", text);
   };
@@ -50,6 +52,8 @@ useEffect(() => {
       });
 
       setParts(d);
+      setloading(false)
+      console.log(d)
     };
 
     getServices();
@@ -71,7 +75,13 @@ useEffect(() => {
         </KeyboardAvoidingView>
       </View>
       <View style={styles.body}>
-        <VerticalList
+       {loading?
+       <ActivityIndicator
+       size={'small'}
+       style={{alignSelf:'center'}}
+       color={Colors.deepBlue}
+       />
+       : <VerticalList
           numColumns={1}
           Data={parts}
           renderItem={({ item }) => {
@@ -102,7 +112,7 @@ useEffect(() => {
           keyExtractor={(item) => {
             return item.id.toString();
           }}
-        />
+        />}
       </View>
     </View>
   );

@@ -27,6 +27,7 @@ import { Services } from "../Services/DummyServices";
 import { SpareParts } from "../SpareParts/DummyDate";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../../../firebase.config";
+import { TextInput } from "react-native";
 
 const Home = ({ navigation }) => {
   const [search, setSearch] = useState("");
@@ -87,34 +88,41 @@ const Home = ({ navigation }) => {
 
   //   };
   const searchService = (text) => {
-    if (text == "") {
-      setFilterServiceData(data);
-      setSearch(text);
-    } else if (text) {
-      const filteringData = data.filter((item) => {
-        const data = item.serviceName.toLowerCase();
-        const entry = text;
-        if (data.includes(entry)) {
-          return item.serviceName;
+    setSearch(text)
+    if(text==''){
+      setSearch(text)
+      setFilterServiceData(data)
+    }
+    else{
+      // console.log(data)
+      const searchFilter = data.filter((item) => {
+        const name=item.serviceName.toLowerCase()
+        const entry=text.toLowerCase()
+        if(name.includes(entry)){
+          return item
         }
       });
-      setFilterServiceData(filteringData);
-
-      setSearch(filteringData.length > 0 ? filteringData[0].serviceName : "");
+      // console.log("Filter Data is  ",searchFilter)
+      setFilterServiceData(searchFilter)
+      setSearch(searchFilter)
     }
   };
   return (
     <View style={[CommonStyles.container, { justifyContent: "space-between" }]}>
       <View style={styles.headerView}>
+       
         <Input
-          borderColor={Colors.white}
-          textColor={Colors.white}
+          borderColor={Colors.deepBlue}
+          textColor={Colors.deepBlue}
           value={search}
+
           onChangeText={(text) => searchService(text.toLowerCase())}
           placeholder="Search Any Service..."
           title={"Search"}
+          
         />
       </View>
+    
       <View style={styles.body}>
         <KeyboardAvoidingView style={{ flex: 1 }} behavior="position">
           {loading && (
@@ -128,7 +136,7 @@ const Home = ({ navigation }) => {
             <ScrollView>
               <View style={styles.containerView}>
                 <View style={styles.rowHolder}>
-                  <Text style={styles.categoryLabel}>Services</Text>
+                  <Text style={styles.categoryLabel}>Popular Services</Text>
                   <TouchableOpacity
                     onPress={() => {
                       navigation.navigate("Services");
@@ -164,6 +172,7 @@ const Home = ({ navigation }) => {
                               });
                             }}
                           />
+                     
                         </View>
                       );
                     }}
@@ -184,7 +193,7 @@ const Home = ({ navigation }) => {
               </View>
               <View style={styles.containerView}>
                 <View style={styles.rowHolder}>
-                  <Text style={styles.categoryLabel}>Spare Parts</Text>
+                  <Text style={styles.categoryLabel}>Best Selling</Text>
                   <TouchableOpacity
                     onPress={() => {
                       navigation.navigate("SpareParts");
@@ -231,18 +240,17 @@ export default Home;
 const styles = StyleSheet.create({
   headerView: {
     padding: hp("1%"),
-    // height: hp('25%'),
     flex: 0.2,
-    backgroundColor: Colors.deepBlue,
+    backgroundColor:'white',
     justifyContent: "center",
-    borderBottomStartRadius: 25,
-    borderBottomEndRadius: 25,
+    borderBottomStartRadius: 60,
+    // borderBottomEndRadius: 65,
   },
   body: {
     // height: hp('75%'),
     borderRadius: 30,
     flex: 0.8,
-    backgroundColor: Colors.white,
+    
     justifyContent: "center",
   },
   headTitle: {
@@ -253,9 +261,10 @@ const styles = StyleSheet.create({
   },
   categoryLabel: {
     marginHorizontal: hp("3%"),
-    fontSize: 18,
-    color: Colors.deepBlue,
-    fontWeight: "bold",
+    fontSize: 20,
+    color: Colors.black,
+    fontWeight: "400",
+textTransform:'uppercase'
   },
   viewAllLabel: {
     margin: hp("1%"),
