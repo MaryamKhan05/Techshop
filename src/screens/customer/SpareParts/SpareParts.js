@@ -23,9 +23,10 @@ const SpareParts = ({ navigation }) => {
   const [search, setSearch] = useState("");
   const [parts, setParts] = useState([]);
   const [loading, setloading] = useState(true);
-  const searchService = (text) => {
-    console.log("text recieved", text);
-  };
+  const [filteredParts, setFilteredParts] = useState(parts);
+  // const searchService = (text) => {
+  //   // console.log("text recieved", text);
+  // };
 
   useEffect(() => {
     const getServices = async () => {
@@ -45,33 +46,62 @@ const SpareParts = ({ navigation }) => {
 
     getServices();
   }, []);
+  const searchService = (text) => {
+    setSearch(text);
+    if (text === "") {
+      setFilteredParts(parts); // Show all parts
+    } else {
+      const filtered = parts.filter((part) =>
+        part.serviceName.toLowerCase().includes(text.toLowerCase())
+      );
+      setFilteredParts(filtered);
+    }
+  };
+  // if (loading) {
+  //   return (
+  //     <ActivityIndicator
+  //       size={"small"}
+  //       style={{ alignSelf: "center" }}
+  //       color={Colors.deepBlue}
+  //     />
+  //   );
+  // }
+
   return (
     <View style={CommonStyles.container}>
       <View style={styles.headerView}>
         <KeyboardAvoidingView behavior="position">
           <Input
-            borderColor={Colors.white}
-            textColor={Colors.white}
+            borderColor={Colors.deepBlue}
+            textColor={Colors.deepBlue}
             value={search}
             onChangeText={(text) => {
               searchService(text);
             }}
-            placeholder="Search Any Spare Parts..."
+            placeholder="Search Any Service..."
             title={"Search"}
           />
         </KeyboardAvoidingView>
       </View>
-      <View style={styles.body}>
-        {loading ? (
-          <ActivityIndicator
-            size={"small"}
-            style={{ alignSelf: "center" }}
-            color={Colors.deepBlue}
-          />
-        ) : (
+      {loading ? (
+        <ActivityIndicator
+          size={"small"}
+          style={{ alignSelf: "center" }}
+          color={Colors.deepBlue}
+        />
+      ) : (
+        <View style={styles.body}>
+          {/* {filteredParts.length === 0 ? (
+              <Text
+                style={[styles.viewAllLabel, { alignSelf: "center", fontSize: 16 }]}
+              >
+                No Services Match Your Search
+              </Text>
+            ) : ( */}
           <VerticalList
             numColumns={1}
-            Data={parts}
+            // Data={parts}
+            Data={filteredParts}
             renderItem={({ item }) => {
               return (
                 <View
@@ -101,8 +131,10 @@ const SpareParts = ({ navigation }) => {
               item.id;
             }}
           />
-        )}
-      </View>
+          {/* ) */}
+          {/* } */}
+        </View>
+      )}
     </View>
   );
 };
@@ -111,11 +143,16 @@ export default SpareParts;
 
 const styles = StyleSheet.create({
   headerView: {
+    // padding: hp("1%"),
+    // // height: hp('25%'),
+    // flex: 0.2,
+    // justifyContent: "center",
+    // backgroundColor: Colors.deepBlue,
     padding: hp("1%"),
-    // height: hp('25%'),
     flex: 0.2,
+    backgroundColor: "white",
     justifyContent: "center",
-    backgroundColor: Colors.deepBlue,
+    borderBottomStartRadius: 60,
   },
   body: {
     borderRadius: 30,
