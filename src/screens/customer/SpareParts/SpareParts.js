@@ -22,25 +22,12 @@ import { ActivityIndicator } from "react-native";
 const SpareParts = ({ navigation }) => {
   const [search, setSearch] = useState("");
   const [parts, setParts] = useState([]);
-  const[loading,setloading]=useState(true)
+  const [loading, setloading] = useState(true);
   const searchService = (text) => {
     console.log("text recieved", text);
   };
 
-//   useEffect(() => {
-//     const getParts = async () => {
-//       const d = [];
-//       const dbRef = collection(db, SpareParts);
-//       const querySnapshot = await getDocs(dbRef);
-//       querySnapshot.forEach((doc) => {
-//         d.push(doc.data());
-//       });
-//       setParts(d);
-//       console.log('parts are', parts)
-//     };
-//     getParts();
-//   }, []);
-useEffect(() => {
+  useEffect(() => {
     const getServices = async () => {
       const d = [];
 
@@ -52,8 +39,8 @@ useEffect(() => {
       });
 
       setParts(d);
-      setloading(false)
-      console.log(d)
+      setloading(false);
+      console.log(d);
     };
 
     getServices();
@@ -75,44 +62,46 @@ useEffect(() => {
         </KeyboardAvoidingView>
       </View>
       <View style={styles.body}>
-       {loading?
-       <ActivityIndicator
-       size={'small'}
-       style={{alignSelf:'center'}}
-       color={Colors.deepBlue}
-       />
-       : <VerticalList
-          numColumns={1}
-          Data={parts}
-          renderItem={({ item }) => {
-            return (
-              <View
-                style={{
-                  paddingVertical: hp("2%"),
-                  paddingHorizontal: hp("1%"),
-                }}
-              >
-                <SparePartsCard
-                  height={hp("30%")}
-                  width={wp("85%")}
-                  name={item.name}
-                  image={item.image}
-                  PriceOne={item.orignalPrice}
-                  PriceTwo={item.discountPrice}
-                  onPress={() => {
-                    navigation.navigate("RequestSparePart", {
-                      name: item.name,
-                      price: item.discountPrice,
-                    });
+        {loading ? (
+          <ActivityIndicator
+            size={"small"}
+            style={{ alignSelf: "center" }}
+            color={Colors.deepBlue}
+          />
+        ) : (
+          <VerticalList
+            numColumns={1}
+            Data={parts}
+            renderItem={({ item }) => {
+              return (
+                <View
+                  style={{
+                    paddingVertical: hp("2%"),
+                    paddingHorizontal: hp("1%"),
                   }}
-                />
-              </View>
-            );
-          }}
-          keyExtractor={(item) => {
-            return item.id.toString();
-          }}
-        />}
+                >
+                  <SparePartsCard
+                    height={hp("30%")}
+                    width={wp("85%")}
+                    name={item.serviceName}
+                    image={item.image}
+                    price={item.servicePrice}
+                    desc={item.serviceDescription}
+                    onPress={() => {
+                      navigation.navigate("RequestSparePart", {
+                        name: item.serviceName,
+                        price: item.servicePrice,
+                      });
+                    }}
+                  />
+                </View>
+              );
+            }}
+            keyExtractor={(item) => {
+              item.id;
+            }}
+          />
+        )}
       </View>
     </View>
   );
@@ -129,11 +118,9 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.deepBlue,
   },
   body: {
-    // height: hp('75%'),
     borderRadius: 30,
     flex: 0.8,
     backgroundColor: Colors.white,
-    justifyContent: "center",
   },
   headTitle: {
     marginHorizontal: wp("5%"),

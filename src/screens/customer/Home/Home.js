@@ -209,7 +209,7 @@ const Home = ({ navigation }) => {
                       <View style={{ paddingHorizontal: hp("2%") }}>
                         <SparePartsCard
                           name={item.serviceName}
-                          // image={item.image}
+                          image={item.image}
                           desc={item.serviceDescription}
                           price={item.servicePrice}
                           onPress={() => {
