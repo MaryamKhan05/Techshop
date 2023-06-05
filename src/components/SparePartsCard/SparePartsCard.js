@@ -17,6 +17,7 @@ const SparePartsCard = ({
   onPress,
   height,
   width,
+  flexdirection,
 }) => {
   return (
     <Card>
@@ -29,24 +30,41 @@ const SparePartsCard = ({
           flexDirection: height ? "column" : "row",
           justifyContent: "space-between",
         }}
+        // style={{
+        //   paddingHorizontal: wp("1%"),
+        //   width: width ? width : wp("85%"),
+        //   height: height ? height : hp("20%"),
+        //   paddingVertical: hp("1%"),
+        //   flexDirection: height ? "column" : flexdirection ? "row" : "column",
+        //   justifyContent: "space-between",
+        // }}
       >
         <View
           style={{
-            width: wp("30%"),
-            justifyContent: "center",
-            alignSelf: "center",
+            flexDirection: height ? "column" : "row",
             alignItems: "center",
           }}
         >
+           <View
+            style={{
+              width: wp("30%"),
+              marginHorizontal: hp("1%"),
+              justifyContent: "center",
+              alignSelf: "center",
+              alignItems: "center",
+            }}
+          >
+
           <Image
             source={{ uri: image }}
             style={{
-              height: height ? hp("12%") : hp("10%"),
-              width: width ? wp("30%") : wp("20%"),
-              borderRadius: 10,
+              height: hp("10%"),
+              width: wp("20%"),
+              borderRadius: 9999,
             }}
             resizeMode="contain"
-          />
+            />
+            </View>
         </View>
         <View
           style={{
@@ -58,23 +76,18 @@ const SparePartsCard = ({
           }}
         >
           <Text
-            style={{
-              color: Colors.black,
-              fontSize: 20,
-              fontWeight: "bold",
-              alignSelf: "center",
-            }}
+            style={{ color: Colors.black, fontSize: 18, fontWeight: "bold" }}
           >
             {name}
           </Text>
           <View
             style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              width: wp("50%"),
+              // flexDirection: "row",
+              // justifyContent: "space-between",
+              // width: wp("50%"),
             }}
           >
-            <Text
+            {/* <Text
               style={{
                 color: Colors.deepBlue,
                 fontSize: 14,
@@ -82,9 +95,15 @@ const SparePartsCard = ({
               }}
             >
               Description:
-            </Text>
+            </Text> */}
             <Text
-              style={{ color: Colors.black, fontSize: 16, fontWeight: "bold" }}
+              // style={{ color: Colors.black, fontSize: 16, fontWeight: "bold" }}
+              style={{
+                color: Colors.deepBlue,
+                fontSize: 14,
+                fontWeight: "300",
+                textAlign: "center",
+              }}
             >
               {desc}
             </Text>
@@ -96,7 +115,7 @@ const SparePartsCard = ({
               width: wp("50%"),
             }}
           >
-            <Text
+            {/* <Text
               style={{
                 color: Colors.deepBlue,
                 fontSize: 14,
@@ -109,7 +128,7 @@ const SparePartsCard = ({
               style={{ color: Colors.black, fontSize: 16, fontWeight: "bold" }}
             >
               {price}
-            </Text>
+            </Text> */}
           </View>
           <View style={{ alignSelf: "center" }}>
             <Button
@@ -117,7 +136,7 @@ const SparePartsCard = ({
               title="Buy"
               height={hp("5%")}
               textSize={14}
-              borderRadius={10}
+              borderRadius={30}
               width={wp("40%")}
             />
           </View>

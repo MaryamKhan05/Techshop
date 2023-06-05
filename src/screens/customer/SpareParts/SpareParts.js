@@ -23,25 +23,13 @@ import Colors from "../../../config/colors/Colors";
 const SpareParts = ({ navigation }) => {
   const [search, setSearch] = useState("");
   const [parts, setParts] = useState([]);
-  const[loading,setloading]=useState(true)
-  const searchService = (text) => {
-    console.log("text recieved", text);
-  };
+  const [loading, setloading] = useState(true);
+  const [filteredParts, setFilteredParts] = useState(parts);
+  // const searchService = (text) => {
+  //   // console.log("text recieved", text);
+  // };
 
-//   useEffect(() => {
-//     const getParts = async () => {
-//       const d = [];
-//       const dbRef = collection(db, SpareParts);
-//       const querySnapshot = await getDocs(dbRef);
-//       querySnapshot.forEach((doc) => {
-//         d.push(doc.data());
-//       });
-//       setParts(d);
-//       console.log('parts are', parts)
-//     };
-//     getParts();
-//   }, []);
-useEffect(() => {
+  useEffect(() => {
     const getServices = async () => {
       const d = [];
 
@@ -53,36 +41,50 @@ useEffect(() => {
       });
 
       setParts(d);
-      setloading(false)
-      console.log(d)
+      setloading(false);
+      console.log(d);
     };
 
     getServices();
   }, []);
+  const searchService = (text) => {
+    setSearch(text);
+    if (text === "") {
+      setFilteredParts(parts); // Show all parts
+    } else {
+      const filtered = parts.filter((part) =>
+        part.serviceName.toLowerCase().includes(text.toLowerCase())
+      );
+      setFilteredParts(filtered);
+    }
+  };
+  // if (loading) {
+  //   return (
+  //     <ActivityIndicator
+  //       size={"small"}
+  //       style={{ alignSelf: "center" }}
+  //       color={Colors.deepBlue}
+  //     />
+  //   );
+  // }
+
   return (
     <View style={CommonStyles.container}>
       <View style={styles.headerView}>
         <KeyboardAvoidingView behavior="position">
           <Input
-            borderColor={Colors.white}
-            textColor={Colors.white}
+            borderColor={Colors.deepBlue}
+            textColor={Colors.deepBlue}
             value={search}
             onChangeText={(text) => {
               searchService(text);
             }}
-            placeholder="Search Any Spare Parts..."
+            placeholder="Search Any Service..."
             title={"Search"}
           />
         </KeyboardAvoidingView>
       </View>
-     {loading && <View>
-<ActivityIndicator
-size={'small'}
-style={{alignSelf:'center'}}
-color={Colors.deepBlue}
-/>
-      </View>}
-     {!loading && <View style={styles.body}>
+      <View style={styles.body}>
        {loading?
        <ActivityIndicator
        size={'small'}
@@ -100,29 +102,28 @@ color={Colors.deepBlue}
                   paddingHorizontal: hp("1%"),
                 }}
               >
-                
-                 <SparePartsCard
-                   height={hp("30%")}
-                   width={wp("85%")}
-                          name={item.serviceName}
-                           image={item.image}
-                          desc={item.serviceDescription}
-                          price={item.servicePrice}
-                          onPress={() => {
-                            navigation.navigate("RequestSparePart", {
-                              name: item.serviceName,
-                              price: item.servicePrice,
-                            });
-                          }}
-                        />
+                <SparePartsCard
+                  height={hp("30%")}
+                  width={wp("85%")}
+                  name={item.name}
+                  image={item.image}
+                  PriceOne={item.orignalPrice}
+                  PriceTwo={item.discountPrice}
+                  onPress={() => {
+                    navigation.navigate("RequestSparePart", {
+                      name: item.name,
+                      price: item.discountPrice,
+                    });
+                  }}
+                />
               </View>
             );
           }}
-          keyExtractor={(item,index) => {
-            return index.toString();
+          keyExtractor={(item) => {
+            return item.id.toString();
           }}
         />}
-      </View>}
+      </View>
     </View>
   );
 };
@@ -131,18 +132,21 @@ export default SpareParts;
 
 const styles = StyleSheet.create({
   headerView: {
+    // padding: hp("1%"),
+    // // height: hp('25%'),
+    // flex: 0.2,
+    // justifyContent: "center",
+    // backgroundColor: Colors.deepBlue,
     padding: hp("1%"),
-    // height: hp('25%'),
     flex: 0.2,
+    backgroundColor: "white",
     justifyContent: "center",
-    backgroundColor: Colors.deepBlue,
+    borderBottomStartRadius: 60,
   },
   body: {
-    // height: hp('75%'),
     borderRadius: 30,
     flex: 0.8,
     backgroundColor: Colors.white,
-    justifyContent: "center",
   },
   headTitle: {
     marginHorizontal: wp("5%"),

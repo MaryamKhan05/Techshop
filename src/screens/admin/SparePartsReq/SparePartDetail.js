@@ -93,7 +93,14 @@ const SparePartDetail = ({ route }) => {
   return (
     <View style={{ flex: 1, backgroundColor: Colors.white }}>
       {adminSpareParts.length === 0 ? (
-        <Text>No requests yet.</Text>
+        <Text
+        style={[
+          styles.viewAllLabel,
+          { alignSelf: "center", fontSize: 16 },
+        ]}
+      >
+        No Request yet
+      </Text>
       ) : (
         <FlatList
           data={adminSpareParts}
@@ -114,6 +121,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginVertical: 10,
+  },
+  viewAllLabel: {
+    margin: hp("1%"),
+    fontSize: 14,
+    color: Colors.red,
+    fontWeight: "bold",
   },
 });
 export default SparePartDetail;

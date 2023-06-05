@@ -381,6 +381,12 @@ const styles = StyleSheet.create({
     // justifyContent: "flex-end",
     width: wp("45"),
   },
+  viewAllLabel: {
+    margin: hp("1%"),
+    fontSize: 14,
+    color: Colors.red,
+    fontWeight: "bold",
+  },
 });
 
 export default SparePartsReq;
