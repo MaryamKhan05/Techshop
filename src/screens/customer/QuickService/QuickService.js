@@ -135,6 +135,7 @@ const serviceId=auth.currentUser.uid + new Date().toTimeString()+ customerName+ 
      Data={allTechnicians}
      renderItem={({item,index})=>{
        return(
+        <View>
          <TouchableOpacity 
          onPress={()=>{
            setSelectedIndex(index)
@@ -145,6 +146,8 @@ const serviceId=auth.currentUser.uid + new Date().toTimeString()+ customerName+ 
          style={[styles.timeslotsContainer,{backgroundColor: index== selectedIndex? Colors.red:Colors.deepBlue}]}>
            <Text style={styles.timeslotsTitle}>{item.name}</Text>
            </TouchableOpacity>
+          {index== selectedIndex && <Text style={{alignSelf:'center',fontSize:9}}>{item.location}</Text>}
+          </View>
        )
      }}
      keyExtractor={(item,index)=>{return index.toString()}}

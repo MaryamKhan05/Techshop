@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, FlatList, Alert, Image } from "react-native";
+import { View, Text, StyleSheet, FlatList, Alert, Image ,ToastAndroid} from "react-native";
 import Button from "../../../components/Button/Button";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { getDocs, collection } from "firebase/firestore";
+import { getDocs, collection,doc ,deleteDoc} from "firebase/firestore";
 import { db } from "../../../../firebase.config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Colors from "../../../config/colors/Colors";
@@ -58,6 +58,7 @@ const SparePartsReq = ({ navigation }) => {
   const [partService, setPartService] = useState([]);
   const [parts, setParts] = useState([]);
   const [spareParts, setSpareParts] = useState([]);
+  const[docIds,setDocIdsData]=useState([])
 
   // useEffect(() => {
   //   const getParts = async () => {
@@ -105,14 +106,17 @@ const SparePartsReq = ({ navigation }) => {
   useEffect(() => {
     const getServices = async () => {
       const d = [];
-
+const e=[]
       const dbRef = collection(db, "SpareParts");
       const querySnapshot = await getDocs(dbRef);
 
       querySnapshot.forEach((doc) => {
         d.push(doc.data());
       });
-
+      querySnapshot.forEach((doc) => {
+        e.push(doc.id);
+      });
+setDocIdsData(e)
       setParts(d);
     };
 
@@ -125,7 +129,40 @@ const SparePartsReq = ({ navigation }) => {
   // };
 
   //FUNCTION TO DELETE THE EXISTING SPARE PARTS
-  const handleDelete = async (item) => {
+  // const handleDelete = async (item) => {
+  //   // Alert.alert(
+  //   //   "Delete Service",
+  //   //   "Are you sure you want to delete this service?",
+  //   //   [
+  //   //     {
+  //   //       text: "Cancel",
+  //   //       style: "cancel",
+  //   //       onPress: () => console.log("cencal pressed"),
+  //   //     },
+  //   //     {
+  //   //       text: "Delete",
+  //   //       style: "destructive",
+  //   //       onPress: async () => {
+  //   //         const updatedParts = parts.filter(
+  //   //           (service) => service.id !== item.id
+  //   //         );
+  //   //         setParts(updatedParts);
+  //   //         await AsyncStorage.setItem(
+  //   //           "spareparts",
+  //   //           JSON.stringify(updatedParts)
+  //   //         );
+  //   //       },
+  //   //     },
+  //   //   ],
+  //   //   { cancelable: true }
+  //   // );
+  
+   
+  // };
+
+
+
+  const handleDelete = async (item,index) => {
     Alert.alert(
       "Delete Service",
       "Are you sure you want to delete this service?",
@@ -139,20 +176,26 @@ const SparePartsReq = ({ navigation }) => {
           text: "Delete",
           style: "destructive",
           onPress: async () => {
-            const updatedParts = parts.filter(
-              (service) => service.id !== item.id
-            );
-            setParts(updatedParts);
-            await AsyncStorage.setItem(
-              "spareparts",
-              JSON.stringify(updatedParts)
-            );
+         console.log("Doc ids are  ",docIds         )
+           const docId= docIds[index]
+           const docRef= doc(db,'SpareParts',docId)
+           deleteDoc(docRef).then(()=>{
+            ToastAndroid.show('Successfully deleted the Service',ToastAndroid.SHORT)
+            setLoading(true)
+            getServices()
+           }).catch((err)=>{
+            
+alert('Something Went Wrong While Deleting!')
+           })
+           
           },
         },
       ],
       { cancelable: true }
     );
-  };
+  };  
+
+
 
   //FUNCTION TO EDIT A EXISTING SPARE PART
   const handleEditService = (item) => {
@@ -175,7 +218,7 @@ const SparePartsReq = ({ navigation }) => {
     await AsyncStorage.setItem("spareparts", JSON.stringify(updatedServices));
   };
 
-  const renderItem = ({ item }) => (
+  const renderItem = ({ item,index }) => (
     <View
       style={{
         margin: hp("1"),
@@ -228,7 +271,7 @@ const SparePartsReq = ({ navigation }) => {
               width={wp("20")}
               height={hp("4.4")}
               title="Delete"
-              onPress={() => handleDelete(item)}
+              onPress={() => handleDelete(item,index)}
             />
           </View>
         </View>

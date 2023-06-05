@@ -40,7 +40,7 @@ resizeMode='contain'
     </View>
     <View style={styles.rowHolder}>
     <Text style={styles.label}>Completed Orders</Text>
-        <Text style={styles.text}>30</Text>
+        <Text style={styles.text}>18</Text>
     </View>
     <TouchableOpacity
     style={[styles.rowHolder,{justifyContent:'center'}]}

@@ -63,7 +63,7 @@ const AssignedWork=({navigation})=>{
 
         <View style={{marginVertical:hp('1%')}}>
         {
-            work &&
+            work.length >0 &&
             <View style={{height:hp('45%')}}>
                 <Text style={[styles.label,{fontSize:18,marginVertical:hp('0.5%')}]}>Assigned Work:</Text>
                 <HorizontalList
@@ -99,7 +99,7 @@ docId
                 </View>
         }
         {
-            !work && <Text style={{fontSize: 15,fontWeight:'bold',alignSelf:'center'}}>You Don't Have Any Assigned Work</Text>
+            work.length==0  && <Text style={{fontSize: 15,fontWeight:'bold',alignSelf:'center'}}>You Don't Have Any Assigned Work</Text>
         }
 
         </View>

@@ -127,10 +127,8 @@ companyName={item.companyName}
 modalYear={item.modalYear}
 ownerAddress={item.ownerAddress}
 used={item.used}
-onPress={()=>{setPhoneNo(item.contactNo)
 
-setShowModal(!showModal)
-}}
+onPress={()=>{Linking.openURL(`tel:${item.contactNo}`);}}
 
 />
                                 </View>

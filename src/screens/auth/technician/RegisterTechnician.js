@@ -17,6 +17,7 @@ const RegisterScreen=({navigation})=>{
     const[name,setName]=useState('')
     const[location,setLocation]=useState('Shamsabad Rawalpindi')
     const[PhoneNo,setPhoneNo]=useState('')
+    const[city,setCity]=useState('')
     const isValidEmail=(email)=>{
       const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       const test = pattern.test(email);
@@ -30,6 +31,7 @@ const RegisterScreen=({navigation})=>{
       if(name===''){return alert('Name Is Required')}
       if(PhoneNo===''){return alert('Contact No Is Required')}
       if(password===''){return alert('Password Is Required')}
+      if(city===''){return alert('City Name Is Required')}
       if(!validEmail){return alert('Provide a Valid Email')}
       else{
         createUserWithEmailAndPassword(auth, email, password)
@@ -42,6 +44,7 @@ const RegisterScreen=({navigation})=>{
             email:email.toLocaleLowerCase(),
             PhoneNo,
             location,
+            city:city.toLocaleLowerCase(),
             type: 'Technician'
           })
           
@@ -97,12 +100,23 @@ resizeMode='contain'
 <View style={{paddingVertical:hp('1%')}}>
 
     <Input
+      value={city}
+      title="City"
+      onChangeText={(text) => {
+        setCity(text);
+      }}
+      placeholder='Enter Your City'
+    />
+</View>
+<View style={{paddingVertical:hp('1%')}}>
+
+    <Input
       value={location}
       title="Location"
       onChangeText={(text) => {
         setLocation(text);
       }}
-      placeholder='Enter Your Email'
+      placeholder='Enter Your Location'
     />
 </View>
 <View style={{paddingVertical:hp('1%')}}>

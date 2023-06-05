@@ -4,6 +4,7 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
+  ActivityIndicator,
   KeyboardAvoidingView,
 } from "react-native";
 import Input from "../../../components/Input/Input";
@@ -18,7 +19,7 @@ import {
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
 import Colors from "../../../config/colors/Colors";
-import { ActivityIndicator } from "react-native";
+
 const SpareParts = ({ navigation }) => {
   const [search, setSearch] = useState("");
   const [parts, setParts] = useState([]);
@@ -74,7 +75,14 @@ useEffect(() => {
           />
         </KeyboardAvoidingView>
       </View>
-      <View style={styles.body}>
+     {loading && <View>
+<ActivityIndicator
+size={'small'}
+style={{alignSelf:'center'}}
+color={Colors.deepBlue}
+/>
+      </View>}
+     {!loading && <View style={styles.body}>
        {loading?
        <ActivityIndicator
        size={'small'}
@@ -92,28 +100,29 @@ useEffect(() => {
                   paddingHorizontal: hp("1%"),
                 }}
               >
-                <SparePartsCard
-                  height={hp("30%")}
-                  width={wp("85%")}
-                  name={item.name}
-                  image={item.image}
-                  PriceOne={item.orignalPrice}
-                  PriceTwo={item.discountPrice}
-                  onPress={() => {
-                    navigation.navigate("RequestSparePart", {
-                      name: item.name,
-                      price: item.discountPrice,
-                    });
-                  }}
-                />
+                
+                 <SparePartsCard
+                   height={hp("30%")}
+                   width={wp("85%")}
+                          name={item.serviceName}
+                           image={item.image}
+                          desc={item.serviceDescription}
+                          price={item.servicePrice}
+                          onPress={() => {
+                            navigation.navigate("RequestSparePart", {
+                              name: item.serviceName,
+                              price: item.servicePrice,
+                            });
+                          }}
+                        />
               </View>
             );
           }}
-          keyExtractor={(item) => {
-            return item.id.toString();
+          keyExtractor={(item,index) => {
+            return index.toString();
           }}
         />}
-      </View>
+      </View>}
     </View>
   );
 };
