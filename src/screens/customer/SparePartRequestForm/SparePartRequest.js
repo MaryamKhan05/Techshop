@@ -8,7 +8,7 @@ import {
 import Button from "../../../components/Button/Button";
 import Colors from "../../../config/colors/Colors";
 import { addDoc, collection } from "firebase/firestore";
-import { db } from "../../../../firebase.config";
+import { db,auth } from "../../../../firebase.config";
 import { ToastAndroid } from "react-native";
 
 const RequestSparePart = ({ navigation, route }) => {
@@ -34,10 +34,13 @@ const RequestSparePart = ({ navigation, route }) => {
     const dbref = collection(db, "SparePartReq");
     addDoc(dbref, {
       sparePartName,
+      customerId: auth.currentUser.uid,
       customerAddress,
       customerName,
       companyName: company,
       modalYear,
+      date: new Date().toDateString(),
+      status:'pending',
       modalName: modal ? modal : "",
       status: "pending",
       requestCategory: sparePartName,

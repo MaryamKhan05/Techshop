@@ -116,7 +116,7 @@ const CustomerDrawer=()=>{
           
         ),
         }}/>
-         <drawer.Screen component={Vechiles} name='Vechiles' options={{drawerLabel:'Vechiles',drawerActiveBackgroundColor:Colors.deepBlue,drawerActiveTintColor:Colors.white, drawerInactiveTintColor:Colors.deepBlue,
+         <drawer.Screen component={Vechiles} name='Vechiles' options={{drawerLabel:'Vehicles',drawerActiveBackgroundColor:Colors.deepBlue,drawerActiveTintColor:Colors.white, drawerInactiveTintColor:Colors.deepBlue,
           drawerIcon: ({ focused, size }) => (
         
             <AntDesign name="car" size={24} color={focused?Colors.white: Colors.deepBlue}/>
@@ -124,7 +124,7 @@ const CustomerDrawer=()=>{
             
           ),
         }}/>
-         <drawer.Screen component={SellVechileForm} name='SellVechileForm' options={{drawerLabel:'Sell Vechile',drawerActiveBackgroundColor:Colors.deepBlue,drawerActiveTintColor:Colors.white, drawerInactiveTintColor:Colors.deepBlue,
+         <drawer.Screen component={SellVechileForm} name='SellVechileForm' options={{drawerLabel:'Sell Vehicle',drawerActiveBackgroundColor:Colors.deepBlue,drawerActiveTintColor:Colors.white, drawerInactiveTintColor:Colors.deepBlue,
          drawerIcon: ({ focused, size }) => (
         
           <Ionicons name="cash" size={24} color={focused?Colors.white: Colors.deepBlue}/>
@@ -153,7 +153,7 @@ const CustomerDrawer=()=>{
             
           ),
         }}/>
-         <drawer.Screen component={VechileAdStatus} name='VechileAdStatus' options={{drawerLabel:'Vechile Ad Status',drawerActiveBackgroundColor:Colors.deepBlue,drawerActiveTintColor:Colors.white, drawerInactiveTintColor:Colors.deepBlue,
+         <drawer.Screen component={VechileAdStatus} name='VechileAdStatus' options={{drawerLabel:'Vehicles Ad Status',drawerActiveBackgroundColor:Colors.deepBlue,drawerActiveTintColor:Colors.white, drawerInactiveTintColor:Colors.deepBlue,
          drawerIcon: ({ focused, size }) => (
         
           <MaterialIcons name="local-car-wash" size={24} color={focused?Colors.white: Colors.deepBlue}/>
