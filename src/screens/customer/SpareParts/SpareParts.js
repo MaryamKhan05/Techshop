@@ -102,25 +102,27 @@ const SpareParts = ({ navigation }) => {
                   paddingHorizontal: hp("1%"),
                 }}
               >
-                <SparePartsCard
-                  height={hp("30%")}
-                  width={wp("85%")}
-                  name={item.name}
-                  image={item.image}
-                  PriceOne={item.orignalPrice}
-                  PriceTwo={item.discountPrice}
-                  onPress={() => {
-                    navigation.navigate("RequestSparePart", {
-                      name: item.name,
-                      price: item.discountPrice,
-                    });
-                  }}
-                />
+               
+                 <SparePartsCard
+                   height={hp("30%")}
+                   width={wp("85%")}
+                          name={item.serviceName}
+                          image={item.image}
+                          
+                          desc={item.serviceDescription}
+                          price={item.servicePrice}
+                          onPress={() => {
+                            navigation.navigate("RequestSparePart", {
+                              name: item.serviceName,
+                              price: item.servicePrice,
+                            });
+                          }}
+                        />
               </View>
             );
           }}
-          keyExtractor={(item) => {
-            return item.id.toString();
+          keyExtractor={(item,index) => {
+            return index.toString();
           }}
         />}
       </View>

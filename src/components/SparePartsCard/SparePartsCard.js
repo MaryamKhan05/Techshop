@@ -111,24 +111,16 @@ const SparePartsCard = ({
           <View
             style={{
               flexDirection: "row",
-              justifyContent: "space-between",
+              justifyContent: "center",
               width: wp("50%"),
             }}
           >
-            {/* <Text
-              style={{
-                color: Colors.deepBlue,
-                fontSize: 14,
-                fontWeight: "bold",
-              }}
-            >
-              Price :
-            </Text>
+           
             <Text
-              style={{ color: Colors.black, fontSize: 16, fontWeight: "bold" }}
+              style={{ alignSelf:'center',color: Colors.black, fontSize: 16, fontWeight: "bold" }}
             >
-              {price}
-            </Text> */}
+             Rs: {price}PKR
+            </Text>
           </View>
           <View style={{ alignSelf: "center" }}>
             <Button
